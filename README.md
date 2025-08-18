@@ -41,6 +41,7 @@ rosrun dvrk_robot dvrk_console_json -j ~/catkin_ws/devel/share/jhu-daVinci/conso
 ```
   Push the button *POWER ON* and *HOME*. You should the words *PSM1*, *PSM2*, *MTML*, *MTMR*, *ECM* becoming green.
 - CAMERA and IMAGE
+  
 Open the Endoscope hardware.
 ```
 source ~/catkin_ws/devel/setup.bash

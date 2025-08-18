@@ -48,3 +48,18 @@ roslaunch dvrk_video decklink_stere0_1280x1024.launch stereo_rig_name:=YOUR_RIG_
 rosrun stereo_pkg StereoConcatenator.py
 ```
 - Activate the game mode on Unity
+
+## TELEOPERATION
+Follow the instruction on the screen to perform *pinch calibration*. To redo the calibration say the word *CALIBRATION*
+### Endoscope Teleoperation
+- Say the word *CAMERA*. When ECM teleoperation is on the quadrant becomes blue.
+- With 2 hands grab the quadrant and move it
+- To rotate the camera tilt your head
+- To center the quadrant say the word *CENTER*
+- To exit ECM Teleoperation say the word *FREEZE*
+### Instrument Teleoperation
+- Activate instrument teleoperation by doing pinch gesture (thumb and index tip) fpr 5 seconds
+- Grab the virtual gripper to move the instrument
+- Jaw angle is controlled through the distance between thumb tip and middle finger tip
+- To clutch, do the pinch gesture (thumb and index tip close)
+- To center the quadrant say the word *POSITION*

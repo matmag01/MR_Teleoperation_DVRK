@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "test_unity_and_ros.sln"
+    "dotnet.defaultSolution": "MR_Teleoperation_DVRK.sln"
 }

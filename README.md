@@ -50,7 +50,7 @@ rosrun stereo_pkg StereoConcatenator.py
 ```
 - Activate the game mode on Unity
 
-## TELEOPERATION
+## Teleoperation
 Follow the instruction on the screen to perform *pinch calibration*. To redo the calibration say the word *CALIBRATION*
 ### Endoscope Teleoperation
 - Say the word *CAMERA*. When ECM teleoperation is on the quadrant becomes blue.

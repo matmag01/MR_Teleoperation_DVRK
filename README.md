@@ -39,7 +39,9 @@ roscore
 ```
 rosrun dvrk_robot dvrk_console_json -j ~/catkin_ws/devel/share/jhu-daVinci/console-SUJ-ECM-PSM1-PSM2.json -m ~/catkin_ws/src/cisst-saw/sawIntuitiveResearchKit/share/socket-streamer/manager-socket-streamer-patient-cart.json
 ```
+  Push the button *POWER ON* and *HOME*. You should the words *PSM1*, *PSM2*, *MTML*, *MTMR*, *ECM* becoming green.
 - CAMERA and IMAGE
+Open the Endoscope hardware.
 ```
 source ~/catkin_ws/devel/setup.bash
 roslaunch dvrk_video decklink_stere0_1280x1024.launch stereo_rig_name:=YOUR_RIG_NAME stereo_proc:=True

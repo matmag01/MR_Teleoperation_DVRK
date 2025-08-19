@@ -356,7 +356,7 @@ public class MovecameraLikeConsole : MonoBehaviour
         isOpen = true;
         //homeButton.SetActive(true);
         motionFilter = new MotionFilter();
-        motionFilter.smoothingFactor = 0.87f;
+        motionFilter.smoothingFactor = 0.4f;
         quad.transform.Find("QuadBgLeft").GetComponent<MeshRenderer>().material.color = Color.cyan;
         quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.cyan;  
         BoxCollider[] colliders = quad.GetComponents<BoxCollider>();

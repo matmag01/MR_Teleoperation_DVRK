@@ -170,7 +170,7 @@ MonoBehaviour:
   quad: {fileID: 746945108}
   headTrack: {fileID: 189900451}
   axis: {fileID: 8755686004610376737, guid: e97cabd5816aa7043821b6b78661feb6, type: 3}
-  scale: 0.19
+  scale: 0.21
   UDP: {fileID: 671443128}
   sphere_marker: {fileID: 8631210952515766784, guid: 09d5b89fd40805249a6a54162e7959d4, type: 3}
   hololens: {fileID: 963194225}
@@ -3965,7 +3965,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UDP: {fileID: 671443128}
-  startInsertionPosition: -0.1643
+  startInsertionPosition: -0.1833
 --- !u!114 &1630875491
 MonoBehaviour:
   m_ObjectHideFlags: 0

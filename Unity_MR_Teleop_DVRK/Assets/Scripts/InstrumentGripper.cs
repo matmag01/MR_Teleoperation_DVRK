@@ -136,6 +136,18 @@ public class InstrumentGripper : MonoBehaviour
             Destroy(cylinderPSM2Bis);
             return;
         }
+        if (tipPxPSM1.x < -200 || tipPxPSM1.x > 1500 || tipPxPSM1.y < -200 || tipPxPSM1.y > 1300)
+        {
+            Destroy(cylinderPSM1);
+            Destroy(cylinderPSM1Bis);
+            return;
+        }
+        if (tipPxPSM2.x < -200 || tipPxPSM2.x > 1500 || tipPxPSM2.y < -200 || tipPxPSM2.y > 1300)
+        {
+            Destroy(cylinderPSM2);
+            Destroy(cylinderPSM2Bis);
+            return;
+        }
         
         if (cylinderPSM1 == null)
         {

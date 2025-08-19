@@ -86,10 +86,10 @@ public class TipVisualNew : MonoBehaviour
 
         deltaInsertion = RosToUnityPosition(EE_ECM).z - startInsertionPosition; // Conpensation Insertion vs Extraction
 
-        tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos) - Vector3.forward*deltaInsertion, calib);
-        tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos) - Vector3.forward*deltaInsertion, calib);
-        //tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos), calib);
-        //tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos), calib);
+        //tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos) - Vector3.forward*deltaInsertion, calib);
+        //tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos) - Vector3.forward*deltaInsertion, calib);
+        tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos), calib);
+        tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos), calib);
         Debug.Log("Pixel pos: " + tipPositionPSM2);
 
         // axis computation
@@ -113,7 +113,7 @@ public class TipVisualNew : MonoBehaviour
 
 
         float x_img = -proj[0] / proj[2] + width/2;
-        float y_img = height - proj[1] / proj[2] + 42;
+        float y_img = height - proj[1] / proj[2] +45;
         
         /*
         float x_img = -proj[0] / proj[2] + width -150;

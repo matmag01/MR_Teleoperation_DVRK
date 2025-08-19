@@ -136,6 +136,7 @@ public class InstrumentGripper : MonoBehaviour
             Destroy(cylinderPSM2Bis);
             return;
         }
+        /*
         if (tipPxPSM1.x < -200 || tipPxPSM1.x > 1500 || tipPxPSM1.y < -200 || tipPxPSM1.y > 1300)
         {
             Destroy(cylinderPSM1);
@@ -148,7 +149,7 @@ public class InstrumentGripper : MonoBehaviour
             Destroy(cylinderPSM2Bis);
             return;
         }
-        
+        */
         if (cylinderPSM1 == null)
         {
             cylinderPSM1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);

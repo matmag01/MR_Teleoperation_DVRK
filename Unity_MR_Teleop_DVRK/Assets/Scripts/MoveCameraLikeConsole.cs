@@ -64,6 +64,7 @@ public class MovecameraLikeConsole : MonoBehaviour
     MotionFilter motionFilter;
     public GameObject audioFeedback;
     bool isFirstTime;
+    public float filterFactor = 0.28f;
     
     // Start is called before the first frame update
     void Start()
@@ -356,7 +357,7 @@ public class MovecameraLikeConsole : MonoBehaviour
         isOpen = true;
         //homeButton.SetActive(true);
         motionFilter = new MotionFilter();
-        motionFilter.smoothingFactor = 0.4f;
+        motionFilter.smoothingFactor = filterFactor;
         quad.transform.Find("QuadBgLeft").GetComponent<MeshRenderer>().material.color = Color.cyan;
         quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.cyan;  
         BoxCollider[] colliders = quad.GetComponents<BoxCollider>();

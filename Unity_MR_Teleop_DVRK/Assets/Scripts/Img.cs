@@ -59,7 +59,9 @@ public class Img : MonoBehaviour
             if (visualReg)
             {
                 DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM2);
-                DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM1);                
+                DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM1);
+                DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM2Right + new Vector2Int(1300, 0));
+                DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM1Right + new Vector2Int(1300, 0));                 
             }
 
             //List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat);

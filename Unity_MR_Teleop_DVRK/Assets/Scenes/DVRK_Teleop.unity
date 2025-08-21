@@ -599,7 +599,7 @@ MonoBehaviour:
   mainCamera: {fileID: 963194225}
   cameraZaxis: {fileID: 829750993}
   UDP: {fileID: 671443128}
-  scale: 0.0009
+  scale: 0.0008
   insertion_step: 0.003
   radius: 0.12
   distance: 0.015
@@ -615,6 +615,7 @@ MonoBehaviour:
   txtCameraFixed: {fileID: 336906984}
   inactivityThreshold: 10
   audioFeedback: {fileID: 699940413}
+  filterFactor: 0.28
 --- !u!1 &266010601
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,7 +768,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &322538626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,7 +776,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 322538625}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7acef0b79454c9b4dae3f8139bc4ba77, type: 3}
   m_Name: 
@@ -3097,6 +3098,7 @@ GameObject:
   - component: {fileID: 1202525460}
   - component: {fileID: 1202525461}
   - component: {fileID: 1202525462}
+  - component: {fileID: 1202525463}
   m_Layer: 0
   m_Name: InstrumentGripper
   m_TagString: Untagged
@@ -3126,7 +3128,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1202525456}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87f4f3f6587177408326be1e027bbea, type: 3}
   m_Name: 
@@ -3142,7 +3144,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1202525456}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2183ef89b693cc4a8b0fff7749d8803, type: 3}
   m_Name: 
@@ -3150,8 +3152,8 @@ MonoBehaviour:
   quad: {fileID: 746945108}
   pixelOffsetPSM2: 0
   pixelOffsetPSM1: 0
-  cylinderMaterial: {fileID: 0}
-  distanceSmoothingFactor: 0.85
+  cylinderMaterialLeft: {fileID: 2100000, guid: e557e6bd70c092844aea417b301c9abc, type: 2}
+  cylinderMaterialRight: {fileID: 2100000, guid: 1374670e346b96d4682c19aa31b45bf6, type: 2}
 --- !u!114 &1202525462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3165,6 +3167,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   quad: {fileID: 746945108}
+--- !u!114 &1202525463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202525456}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00efb6d9dbb318345aa53ac89018e4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quad: {fileID: 746945108}
+  pixelOffsetPSM2: 0
+  pixelOffsetPSM1: 0
+  cylinderMaterialLeft: {fileID: 2100000, guid: 952e3ec7b5f621d4698e8bc66bc91d1b, type: 2}
+  cylinderMaterialRight: {fileID: 2100000, guid: f033d5f9167bb1748a54dd647014405c, type: 2}
 --- !u!1 &1255125003
 GameObject:
   m_ObjectHideFlags: 0
@@ -4306,7 +4325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!328 &1741465316
 VideoPlayer:
   m_ObjectHideFlags: 0
@@ -4314,7 +4333,7 @@ VideoPlayer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1741465315}
-  m_Enabled: 0
+  m_Enabled: 1
   m_VideoClip: {fileID: 32900000, guid: a74284cbafc486c44a5745920af68428, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0

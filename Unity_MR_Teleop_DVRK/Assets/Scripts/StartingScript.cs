@@ -60,7 +60,7 @@ public class StartingScript : MonoBehaviour
         OFFPSM1.GetComponent<MeshRenderer>().enabled = true;
         //homeButton.SetActive(false);
         //calibButton.SetActive(false);
-        video.SetActive(false);
+        //video.SetActive(false);
         isCenetered = true;
         BoxCollider[] colliders = quad.GetComponents<BoxCollider>();
         foreach (BoxCollider col in colliders)

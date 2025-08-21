@@ -8,7 +8,7 @@ using System.Linq;
 using TMPro;
 using System.Globalization;
 
-public class TipVisualNew : MonoBehaviour
+public class HandEyeRegistration : MonoBehaviour
 {
     public GameObject UDP;
 
@@ -17,6 +17,7 @@ public class TipVisualNew : MonoBehaviour
     public static Quaternion EE1_quat;
     public static Vector3 EE2_pos;
     public static Vector3 EE_ECM;
+    public static Quaternion ECM_quat;
     public static Quaternion EE2_quat;
     public static Matrix<float> calib; // 3x3 calibration matrix
     public static Matrix<float> calibRight; // 3x3 calibration matrix
@@ -47,60 +48,13 @@ public class TipVisualNew : MonoBehaviour
             { 0f, 1627.7641f, 549.8018f },
             { 0f, 0f, 1f }
         };
-        var matrixDara1289x1920Right = new float[,]
-        {
-            { 1622.238301589672f, 0f, 623.0927486909604f },
-            { 0f, 1619.872850151532f,  514.2315245134624f },
-            { 0f, 0f, 1f }
-        };
-        var R1289x1920 = new float[,]
-        {
-            { 0.9998796907271614f, 0.0145906751555386f, 0.005264624379919685f },
-            { -0.01463907337906151f, 0.9998498268910121f,  0.009274761270001854f },
-            { -0.005128508746073138f, -0.009350714652828544f, 0.999943129649643f }
-        };
-        var matrixData1280x1024Proj = new float[,]
-        {
-            { 1814.948109173233f, 0f,  48.0199761390686f },
-            { 0f, 1814.948109173233f, 520.2153778076172f },
-            { 0f, 0f, 1f }
-        };
-
-        var matrixDataStereo = new float[,]
-        {
-            {1625.634800342367f, 0f, 842.165381812819f},
-            {0f, 1631.406282150416f, 565.8816817925815f},
-            { 0f, 0f, 1f }
-        };
-        /*
-        var matrixDataNewCalib = new float[,]
-        {
-            {1925.853728626144f, 0f, 471.7813415527344f},
-            {0f, 1925.853728626144f, 570.2743759155273f},
-            { 0f, 0f, 1f }
-        };
-        */
-        var matrixDataNewCalib = new float[,]
-        {
-            {1609.3402719283479f, 0f, 491.4085151655889f},
-            {0f, 1608.1829670949828f, 565.8012149050164f},
-            { 0f, 0f, 1f }
-        };
 
         calib = Matrix<float>.Build.DenseOfArray(matrixData1280x1024);
-        calibRight = Matrix<float>.Build.DenseOfArray(matrixDara1289x1920Right);
-        R = Matrix<float>.Build.DenseOfArray(R1289x1920);
-        t = Vector<float>.Build.DenseOfArray(new float[] {
-            0.005299021968888273f,
-            0.0003061683867987699f,
-            0.00022213790839694056f
-        });
-        baseline = (float)t.L2Norm();
     }
 
     void Update()
     {
-        
+
         EE1_pos = UDPComm.EE_pos_PSM1;
         EE1_quat = UDPComm.EE_quat_PSM1;
         EE2_pos = UDPComm.EE_pos_PSM2;
@@ -110,19 +64,34 @@ public class TipVisualNew : MonoBehaviour
         zCoordinatePSM1 = RosToUnityPosition(EE1_pos).z;
         zCoordinatePSM2 = RosToUnityPosition(EE2_pos).z;
 
-        deltaInsertion = RosToUnityPosition(EE_ECM).z - startInsertionPosition; // Conpensation Insertion vs Extraction
-
-        //tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos) - Vector3.forward*deltaInsertion, calib);
-        //tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos) - Vector3.forward*deltaInsertion, calib);
         tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos), calib);
         tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos), calib);
-        //tipPositionPSM2Right = ProjectToPixelRight(RosToUnityPosition(EE2_pos), calibRight, R, t);
-        //tipPositionPSM1Right = ProjectToPixelRight(RosToUnityPosition(EE1_pos), calib, R, t);
         Debug.Log("Pixel pos left: " + tipPositionPSM2);
         // axis computation
         //axesPSM2 = GetProjectedAxes(EE2_pos, EE2_quat);
 
         //Debug.Log($"Origin: {axesPSM2[0]}, X: {axesPSM2[1]}, Y: {axesPSM2[2]}, Z: {axesPSM2[3]}");
+
+        EE1_pos = UDPComm.EE_pos_PSM1;
+        EE1_quat = UDPComm.EE_quat_PSM1;
+        EE2_pos = UDPComm.EE_pos_PSM2;
+        EE2_quat = UDPComm.EE_quat_PSM2;
+        EE_ECM = UDPComm.EE_pos_ECM;
+        ECM_quat = UDPComm.EE_quat_ECM;
+
+        // ECM wrt base
+        Matrix4x4 T_ecm_base_to_ecm_gripper = Matrix4x4.TRS(RosToUnityPosition(EE_ECM), ECM_quat, Vector3.one); 
+        
+        // PSM1 in camera
+        Vector3 pos_psm1_in_camera_frame = T_ecm_base_to_ecm_gripper.MultiplyPoint(RosToUnityPosition(EE1_pos));
+
+        // Proietta il punto del PSM1
+        tipPositionPSM1 = ProjectToPixel(pos_psm1_in_camera_frame, calib);
+        
+        // Ripeti il calcolo per il PSM2
+        Vector3 pos_psm2_in_camera_frame = T_ecm_base_to_ecm_gripper.MultiplyPoint(RosToUnityPosition(EE2_pos));
+        tipPositionPSM2 = ProjectToPixel(pos_psm2_in_camera_frame, calib);
+    
         
     }
 
@@ -136,29 +105,6 @@ public class TipVisualNew : MonoBehaviour
         });
 
         Vector<float> proj = calibMatrix * point3D;
-        //Debug.Log("proj: " + proj);
-
-
-        float x_img = -proj[0] / proj[2] + width/2;
-        float y_img = height - proj[1] / proj[2] +45;
-        
-        /*
-        float x_img = -proj[0] / proj[2] + width -150;
-        float y_img = height - proj[1] / proj[2] +50;
-        */
-        return new Vector2Int(Mathf.RoundToInt(x_img), Mathf.RoundToInt(y_img));
-    }
-
-    public static Vector2Int ProjectToPixelRight(Vector3 pos, Matrix<float> calibMatrixRight, Matrix<float> RMatrix, Vector<float> tVector)
-    {
-        Vector3 posRos = pos;
-        Vector<float> point3D = Vector<float>.Build.DenseOfArray(new float[] {
-            posRos.x,
-            posRos.y,
-            posRos.z
-        });
-
-        Vector<float> proj = calibMatrixRight * (RMatrix * point3D + tVector);
         //Debug.Log("proj: " + proj);
 
 

@@ -9,7 +9,7 @@ using TMPro;
 using System.Globalization;
 
 
-public class InstrumentGripperNew : MonoBehaviour
+public class InstrumentGripperRight : MonoBehaviour
 {
     public GameObject quad;
     public float pixelOffsetPSM2 = 0f;
@@ -72,11 +72,11 @@ public class InstrumentGripperNew : MonoBehaviour
     {
         List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat);
         List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat);
-        tipPxPSM1 = new Vector2(50, 100);
+        tipPxPSM1 = TipVisualNew.tipPositionPSM1Right;
 
         zPxPSM1 = axesPSM1[3];
         dirZPxPSM1 = (zPxPSM1 - tipPxPSM1);
-        tipPxPSM2 = new Vector2(400, 1000);;
+        tipPxPSM2 = TipVisualNew.tipPositionPSM2Right;
         zPxPSM2 = axesPSM2[3];
         dirZPxPSM2 = (zPxPSM2 - tipPxPSM2);
         //float zPSM2 = scale * TipVisualNew.zCoordinatePSM2;
@@ -131,7 +131,7 @@ public class InstrumentGripperNew : MonoBehaviour
 
         worldPosEndPSM1 = quad.transform.position + quad.transform.right * localPointEndPSM1.x + quad.transform.up * localPointEndPSM1.y + quad.transform.forward * zEnd;
         worldPosEndPSM2 = quad.transform.position + quad.transform.right * localPointEndPSM2.x + quad.transform.up * localPointEndPSM2.y + quad.transform.forward * zEnd;;
-        /*
+        /*    
         if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
         {
             Destroy(cylinderPSM1);
@@ -141,11 +141,25 @@ public class InstrumentGripperNew : MonoBehaviour
             return;
         }
         */
+        /*
+        if (tipPxPSM1.x < -200 || tipPxPSM1.x > 1500 || tipPxPSM1.y < -200 || tipPxPSM1.y > 1300)
+        {
+            Destroy(cylinderPSM1);
+            Destroy(cylinderPSM1Bis);
+            return;
+        }
+        if (tipPxPSM2.x < -200 || tipPxPSM2.x > 1500 || tipPxPSM2.y < -200 || tipPxPSM2.y > 1300)
+        {
+            Destroy(cylinderPSM2);
+            Destroy(cylinderPSM2Bis);
+            return;
+        }
+        */
         if (cylinderPSM1 == null)
         {
             cylinderPSM1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             //cylinderPSM1.GetComponent<Renderer>().material.color = Color.gray;
-            cylinderPSM1.GetComponent<Renderer>().material = cylinderMaterialLeft;
+            cylinderPSM1.GetComponent<Renderer>().material = cylinderMaterialRight;
             Destroy(cylinderPSM1.GetComponent<Collider>());
         }
 

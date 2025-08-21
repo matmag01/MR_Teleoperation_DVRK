@@ -17,7 +17,7 @@ public class Img : MonoBehaviour
     //public AxisOverlayManager axisOverlayManager;
     // private variables
     /*< 2d texture >*/
-    Texture2D tex2d_stereo;
+    static public Texture2D tex2d_stereo;
     public int width = 1300*2;
     public int height = 1024;
     public bool visualReg = false;
@@ -56,6 +56,7 @@ public class Img : MonoBehaviour
             newFrameAvailable = false;
             tex2d_stereo.LoadImage(img_msg.data);
             //DrawTipMarker(tex2d_stereo, TipReceiver.latestTip);
+            List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat);
 
             if (visualReg)
             {
@@ -63,6 +64,10 @@ public class Img : MonoBehaviour
                 DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM1);
                 DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM2Right + new Vector2Int(1300, 0));
                 DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM1Right + new Vector2Int(1300, 0));
+                DrawLine(tex2d_stereo, axesPSM2[0], axesPSM2[1], Color.red);    // X --> Red
+                DrawLine(tex2d_stereo, axesPSM2[0], axesPSM2[2], Color.green);  // Y --> Green
+                DrawLine(tex2d_stereo, axesPSM2[0], axesPSM2[3], Color.blue);   // Z --> blue
+                //Debug.Log($"Origin: {axesPSM2[0]}, X: {axesPSM2[1]}, Y: {axesPSM2[2]}, Z: {axesPSM2[3]}");
             }
             /*
             if (visualReg)
@@ -243,7 +248,7 @@ public class Img : MonoBehaviour
         DrawCylinder(tex, ip3, ip4, col);
         DrawCylinder(tex, ip4, ip1, col);
     }
-
+    */
     void DrawLine(Texture2D tex, Vector2Int p1, Vector2Int p2, Color color)
     {
         int x0 = p1.x;
@@ -282,5 +287,5 @@ public class Img : MonoBehaviour
             }
         }
     }
-    */
+    
 }

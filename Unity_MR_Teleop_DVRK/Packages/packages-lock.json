@@ -7,16 +7,6 @@
       "dependencies": {},
       "hash": "a22299e7e94eaa13ac17b326e0de8f2d3afa9e46"
     },
-    "com.microsoft.azure.spatial-anchors-sdk.core": {
-      "version": "file:MixedReality/com.microsoft.azure.spatial-anchors-sdk.core-2.11.0.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.unity.subsystemregistration": "1.0.6",
-        "com.unity.xr.arsubsystems": "4.0.8",
-        "com.unity.xr.arfoundation": "4.0.12"
-      }
-    },
     "com.microsoft.mixedreality.openxr": {
       "version": "file:MixedReality/com.microsoft.mixedreality.openxr-1.11.2.tgz",
       "depth": 0,
@@ -76,42 +66,6 @@
       "dependencies": {
         "com.microsoft.mixedreality.toolkit.foundation": "2.8.3"
       }
-    },
-    "com.microsoft.mixedreality.wlt.asa": {
-      "version": "file:MixedReality/com.microsoft.mixedreality.wlt.asa-1.5.9.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.microsoft.azure.spatial-anchors-sdk.core": "2.11.0",
-        "com.microsoft.mixedreality.worldlockingtools": "1.5.9"
-      }
-    },
-    "com.microsoft.mixedreality.wlt.asa.samples": {
-      "version": "file:MixedReality/com.microsoft.mixedreality.wlt.asa.samples-1.5.9.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.microsoft.azure.spatial-anchors-sdk.core": "2.11.0",
-        "com.microsoft.mixedreality.toolkit.foundation": "2.7.0",
-        "com.microsoft.mixedreality.wlt.asa": "1.5.9",
-        "com.microsoft.mixedreality.worldlockingtools": "1.5.9",
-        "com.microsoft.mixedreality.worldlockingsamples": "1.5.9"
-      }
-    },
-    "com.microsoft.mixedreality.worldlockingsamples": {
-      "version": "file:MixedReality/com.microsoft.mixedreality.worldlockingsamples-1.5.9.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.microsoft.mixedreality.toolkit.foundation": "2.7.0",
-        "com.microsoft.mixedreality.worldlockingtools": "1.5.9"
-      }
-    },
-    "com.microsoft.mixedreality.worldlockingtools": {
-      "version": "file:MixedReality/com.microsoft.mixedreality.worldlockingtools-1.5.9.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {}
     },
     "com.unity.collab-proxy": {
       "version": "2.8.2",
@@ -210,15 +164,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.subsystemregistration": {
-      "version": "1.1.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.subsystems": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.test-framework": {
       "version": "1.1.33",
       "depth": 1,
@@ -295,15 +240,6 @@
         "com.unity.modules.particlesystem": "1.0.0",
         "com.unity.modules.unityanalytics": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.xr.arsubsystems": {
-      "version": "5.0.2",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.xr.arfoundation": "5.0.2"
       },
       "url": "https://packages.unity.com"
     },

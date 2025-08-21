@@ -43,6 +43,7 @@ public class StartingScript : MonoBehaviour
     bool firstTimeAudio = true;
     public GameObject txtQuadFixed;
     public GameObject txtCameraFixed;
+    public bool showVideo = false;
 
     // Start is called before the first frame update
     void Start()
@@ -53,14 +54,24 @@ public class StartingScript : MonoBehaviour
         txtQuadFixed.GetComponent<MeshRenderer>().enabled = true;
         txtCameraFixed.GetComponent<MeshRenderer>().enabled = false;
         badHandTracking.GetComponent<MeshRenderer>().enabled = false;
-        intro.GetComponent<MeshRenderer>().enabled = true;
+        //intro.GetComponent<MeshRenderer>().enabled = true;
         ONPSM2.GetComponent<MeshRenderer>().enabled = false;
         OFFPSM2.GetComponent<MeshRenderer>().enabled = true;
         ONPSM1.GetComponent<MeshRenderer>().enabled = false;
         OFFPSM1.GetComponent<MeshRenderer>().enabled = true;
         //homeButton.SetActive(false);
         //calibButton.SetActive(false);
-        video.SetActive(false);
+        if (showVideo)
+        {
+            //video.SetActive(false);
+            intro.GetComponent<MeshRenderer>().enabled = false;
+        }
+        else
+        {
+            video.SetActive(false);
+            intro.GetComponent<MeshRenderer>().enabled = true;            
+        }
+    
         isCenetered = true;
         BoxCollider[] colliders = quad.GetComponents<BoxCollider>();
         foreach (BoxCollider col in colliders)

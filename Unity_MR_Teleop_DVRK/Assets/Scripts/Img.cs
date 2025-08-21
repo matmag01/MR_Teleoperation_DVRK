@@ -56,14 +56,23 @@ public class Img : MonoBehaviour
             newFrameAvailable = false;
             tex2d_stereo.LoadImage(img_msg.data);
             //DrawTipMarker(tex2d_stereo, TipReceiver.latestTip);
+
             if (visualReg)
             {
                 DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM2);
                 DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM1);
                 DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM2Right + new Vector2Int(1300, 0));
-                DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM1Right + new Vector2Int(1300, 0));                 
+                DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM1Right + new Vector2Int(1300, 0));
             }
-
+            /*
+            if (visualReg)
+            {
+                DrawTipMarker(tex2d_stereo, TipVisualNew.tipPositionPSM2);
+                DrawTipMarker(tex2d_stereo, new Vector2Int(700, 400));
+                //DrawTipMarker(tex2d_stereo, new Vector2Int(950, 500) + new Vector2Int(1300, 0));
+                //DrawTipMarker(tex2d_stereo, new Vector2Int(650, 400) + new Vector2Int(1300, 0));
+            }
+            */
             //List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat);
             //List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat);
 

@@ -185,6 +185,7 @@ MonoBehaviour:
   badHandTracking: {fileID: 715794253}
   txtQuadFixed: {fileID: 831608077}
   txtCameraFixed: {fileID: 336906984}
+  showVideo: 1
 --- !u!114 &43717180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,7 +768,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &322538626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,7 +776,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 322538625}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7acef0b79454c9b4dae3f8139bc4ba77, type: 3}
   m_Name: 
@@ -4487,7 +4488,7 @@ MonoBehaviour:
   contrast: 1.25
   width: 2600
   height: 1024
-  visualReg: 0
+  visualReg: 1
 --- !u!4 &1869107635
 Transform:
   m_ObjectHideFlags: 0

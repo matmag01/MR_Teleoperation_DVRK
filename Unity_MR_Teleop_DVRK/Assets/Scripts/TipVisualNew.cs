@@ -37,7 +37,6 @@ public class TipVisualNew : MonoBehaviour
     void Start()
     {
         // Calibration matrix 3x3
-
         var matrixData1280x1024 = new float[,]
         {
             { 1621.6418f, 0f, 498.3872f },
@@ -48,42 +47,21 @@ public class TipVisualNew : MonoBehaviour
         {
             { 1814.948109173233f, 0f,  48.0199761390686f, 0f },
             { 0f, 1814.948109173233f, 520.2153778076172f, 0f },
-            { 0f, 0f, 0f, 1f }
+            { 0f, 0f, 1f, 0f }
         };
         var matrixData1280x1024ProjRight = new float[,]
         {
             { 1814.948109173233f, 0f,  48.0199761390686f, -10.66455250459322f },
             { 0f, 1814.948109173233f, 520.2153778076172f, 0f },
-            { 0f, 0f, 0f, 1f }
+            { 0f, 0f, 1f, 0f }
         };
-        var matrixDataStereo = new float[,]
-        {
-            {1625.634800342367f, 0f, 842.165381812819f},
-            {0f, 1631.406282150416f, 565.8816817925815f},
-            { 0f, 0f, 1f }
-        };
-        /*
-        var matrixDataNewCalib = new float[,]
-        {
-            {1925.853728626144f, 0f, 471.7813415527344f},
-            {0f, 1925.853728626144f, 570.2743759155273f},
-            { 0f, 0f, 1f }
-        };
-        */
-        var matrixDataNewCalib = new float[,]
-        {
-            {1609.3402719283479f, 0f, 491.4085151655889f},
-            {0f, 1608.1829670949828f, 565.8012149050164f},
-            { 0f, 0f, 1f }
-        };
-
+        
         calib = Matrix<float>.Build.DenseOfArray(matrixData1280x1024Proj);
         calibRight = Matrix<float>.Build.DenseOfArray(matrixData1280x1024ProjRight);
     }
 
     void Update()
     {
-        
         EE1_pos = UDPComm.EE_pos_PSM1;
         EE1_quat = UDPComm.EE_quat_PSM1;
         EE2_pos = UDPComm.EE_pos_PSM2;
@@ -93,22 +71,21 @@ public class TipVisualNew : MonoBehaviour
         zCoordinatePSM1 = RosToUnityPosition(EE1_pos).z;
         zCoordinatePSM2 = RosToUnityPosition(EE2_pos).z;
 
-        deltaInsertion = RosToUnityPosition(EE_ECM).z - startInsertionPosition; // Conpensation Insertion vs Extraction
-
         //tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos) - Vector3.forward*deltaInsertion, calib);
         //tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos) - Vector3.forward*deltaInsertion, calib);
         tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos), calib);
         tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos), calib);
         tipPositionPSM2Right = ProjectToPixel(RosToUnityPosition(EE2_pos), calibRight);
         tipPositionPSM1Right = ProjectToPixel(RosToUnityPosition(EE1_pos), calibRight);
+        Debug.Log("PSM2 pos: " + EE2_pos);
         Debug.Log("Pixel pos: " + tipPositionPSM2);
-
+        Debug.Log("Pixel pos Right Img: " + tipPositionPSM2Right);
+        
         // axis computation
         //axesPSM2 = GetProjectedAxes(EE2_pos, EE2_quat);
 
         //Debug.Log($"Origin: {axesPSM2[0]}, X: {axesPSM2[1]}, Y: {axesPSM2[2]}, Z: {axesPSM2[3]}");
     }
-
 
     /*
     public static Vector2Int ProjectToPixel(Vector3 pos, Matrix<float> calibMatrix)
@@ -126,10 +103,6 @@ public class TipVisualNew : MonoBehaviour
 
         float x_img = -proj[0] / proj[2] + width/2;
         float y_img = height - proj[1] / proj[2] + 42;
-        
-        
-        float x_img = -proj[0] / proj[2] + width -150;
-        float y_img = height - proj[1] / proj[2] +50;
         
         return new Vector2Int(Mathf.RoundToInt(x_img), Mathf.RoundToInt(y_img));
     }
@@ -166,10 +139,11 @@ public class TipVisualNew : MonoBehaviour
         }
 
         float x_pixel = u / w;
-        float y_pixel = - v / w;
+        float y_pixel = v / w;
 
         return new Vector2Int(Mathf.RoundToInt(x_pixel), Mathf.RoundToInt(y_pixel));
     }
+    
     public static List<Vector2Int> GetProjectedAxes(Vector3 pos, Quaternion quat, float axisLength = 0.02f)
     {
         List<Vector2Int> axisPixels = new List<Vector2Int>();
@@ -195,6 +169,7 @@ public class TipVisualNew : MonoBehaviour
     }
     public static Vector3 RosToUnityPosition(Vector3 rosPos)
     {
-        return new Vector3(rosPos.x, rosPos.z, rosPos.y);  // Scambia Y e Z
+        // Change Y and Z (--> in UDP.comm they are inverted wrt to ROS). The change of sign is an offset to solve projection problem --> Need to be changed
+        return new Vector3(-rosPos.x, -rosPos.z, rosPos.y);  
     }
 }

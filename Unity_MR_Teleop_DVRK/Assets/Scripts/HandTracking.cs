@@ -184,7 +184,7 @@ public class HandTracking : MonoBehaviour
             {
                 if (PSM_flag == PSM1)
                 {
-                    if (!InstrumentGripper.smallDistancePSM1)
+                    if (!StartHandTracking.smallDistancePSM1)
                     {
                         Debug.Log("STOP: ");
                         if (PSM_flag == PSM1)
@@ -209,7 +209,7 @@ public class HandTracking : MonoBehaviour
                 }
                 if (PSM_flag == PSM2)
                 {
-                    if (!InstrumentGripper.smallDistancePSM2)
+                    if (!StartHandTracking.smallDistancePSM2)
                     {
                         Debug.Log("STOP: ");
                         if (PSM_flag == PSM2)
@@ -380,16 +380,6 @@ public class HandTracking : MonoBehaviour
 
 
         // Rotation control
-
-        // OLD METHOD MATTEO:
-
-        // How much I rotate my hand
-        // Quaternion deltaRot = Quaternion.Inverse(startHandRot) * handAxis.transform.rotation;
-        //deltaRot.eulerAngles = new Vector3(-deltaRot.eulerAngles.x, deltaRot.eulerAngles.y, -deltaRot.eulerAngles.z);
-
-        // new_EE_rot = deltaRot * startEERot;
-
-
         // NEW METHOD:
 
         Quaternion axis_rot = Quaternion.Inverse(startHandRot) * handAxis.transform.rotation;
@@ -400,14 +390,7 @@ public class HandTracking : MonoBehaviour
             axis_rot = Quaternion.Inverse(offset) * axis_rot * offset;
         }
 
-        new_EE_rot = axis_rot * startEERot; // Attention: x axis is shifted (I think)
-
-
-        // NEW METHOD 2:
-
-        //hand_rot_change = (Quaternion.Inverse(Quaternion.Inverse(holo_2_endo) * startHandRot) * Quaternion.Inverse(holo_2_endo) * hololens.transform.rotation * indexRot);
-        //hand_rot_change = new(hand_rot_change.x, hand_rot_change.z, hand_rot_change.y, hand_rot_change.w);
-        //new_EE_rot = EE_start_rot * hand_rot_change;
+        new_EE_rot = axis_rot * startEERot; 
 
         //Debug.Log("MOVE : PSM flag: " + PSM_flag + " EE rot: " + EE_quat + "EE start rot: " + startEERot + "new EE pose: " + new_EE_rot + "jaw angle: " + jaw_angle);
 
@@ -443,7 +426,7 @@ public class HandTracking : MonoBehaviour
         }
         if (!stopJawAngle)
         {
-            toSend = ((desAngle - jaw_angle) / 10.0f) * T + jaw_angle;
+            toSend = ((desAngle - jaw_angle) / 7.0f) * T + jaw_angle;
             T += Time.deltaTime;
         }
         return toSend;

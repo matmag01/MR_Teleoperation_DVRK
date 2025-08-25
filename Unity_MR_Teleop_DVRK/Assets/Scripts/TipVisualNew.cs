@@ -55,9 +55,20 @@ public class TipVisualNew : MonoBehaviour
             { 0f, 1814.948109173233f, 520.2153778076172f, 0f },
             { 0f, 0f, 1f, 0f }
         };
-        
-        calib = Matrix<float>.Build.DenseOfArray(matrixData1280x1024Proj);
-        calibRight = Matrix<float>.Build.DenseOfArray(matrixData1280x1024ProjRight);
+        var matrixData1280x1024ProjNew = new float[,]
+        {
+            { 1925.85373f, 0f,  471.78134f, 0f },
+            { 0f, 1925.85373f, 570.27438f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+        var matrixData1280x1024ProjRightNew = new float[,]
+        {
+            { 1925.85373f, 0f,  471.78134f, -10.2311f },
+            { 0f, 1925.85373f, 570.27438f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+        calib = Matrix<float>.Build.DenseOfArray(matrixData1280x1024ProjNew);
+        calibRight = Matrix<float>.Build.DenseOfArray(matrixData1280x1024ProjRightNew);
     }
 
     void Update()
@@ -67,7 +78,6 @@ public class TipVisualNew : MonoBehaviour
         EE2_pos = UDPComm.EE_pos_PSM2;
         EE2_quat = UDPComm.EE_quat_PSM2;
         EE_ECM = UDPComm.EE_pos_ECM;
-
         zCoordinatePSM1 = RosToUnityPosition(EE1_pos).z;
         zCoordinatePSM2 = RosToUnityPosition(EE2_pos).z;
 
@@ -77,9 +87,6 @@ public class TipVisualNew : MonoBehaviour
         tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos), calib);
         tipPositionPSM2Right = ProjectToPixel(RosToUnityPosition(EE2_pos), calibRight);
         tipPositionPSM1Right = ProjectToPixel(RosToUnityPosition(EE1_pos), calibRight);
-        Debug.Log("PSM2 pos: " + EE2_pos);
-        Debug.Log("Pixel pos: " + tipPositionPSM2);
-        Debug.Log("Pixel pos Right Img: " + tipPositionPSM2Right);
         
         // axis computation
         //axesPSM2 = GetProjectedAxes(EE2_pos, EE2_quat);
@@ -144,7 +151,7 @@ public class TipVisualNew : MonoBehaviour
         return new Vector2Int(Mathf.RoundToInt(x_pixel), Mathf.RoundToInt(y_pixel));
     }
     
-    public static List<Vector2Int> GetProjectedAxes(Vector3 pos, Quaternion quat, float axisLength = 0.02f)
+    public static List<Vector2Int> GetProjectedAxes(Vector3 pos, Quaternion quat, float axisLength = 0.1f)
     {
         List<Vector2Int> axisPixels = new List<Vector2Int>();
 
@@ -167,9 +174,32 @@ public class TipVisualNew : MonoBehaviour
 
         return axisPixels;
     }
+    public static List<Vector2Int> GetProjectedAxesRigth(Vector3 pos, Quaternion quat, float axisLength = 0.1f)
+    {
+        List<Vector2Int> axisPixels = new List<Vector2Int>();
+
+        Vector3 origin = RosToUnityPosition(pos);
+        Matrix4x4 R = Matrix4x4.Rotate(quat);
+
+        Vector3 x = origin + R.MultiplyVector(Vector3.right) * axisLength;
+        Vector3 y = origin + R.MultiplyVector(Vector3.up) * axisLength;
+        Vector3 z = origin + R.MultiplyVector(Vector3.forward) * axisLength;
+
+        Vector2Int origin_px = ProjectToPixel(origin, calibRight);
+        Vector2Int x_px = ProjectToPixel(x, calibRight);
+        Vector2Int y_px = ProjectToPixel(y, calibRight);
+        Vector2Int z_px = ProjectToPixel(z, calibRight);
+
+        axisPixels.Add(origin_px);
+        axisPixels.Add(x_px);
+        axisPixels.Add(y_px);
+        axisPixels.Add(z_px);
+
+        return axisPixels;
+    }
     public static Vector3 RosToUnityPosition(Vector3 rosPos)
     {
         // Change Y and Z (--> in UDP.comm they are inverted wrt to ROS). The change of sign is an offset to solve projection problem --> Need to be changed
-        return new Vector3(-rosPos.x, -rosPos.z, rosPos.y);  
+        return new Vector3(-rosPos.x, -rosPos.z, rosPos.y);
     }
 }

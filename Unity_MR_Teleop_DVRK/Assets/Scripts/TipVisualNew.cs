@@ -157,10 +157,9 @@ public class TipVisualNew : MonoBehaviour
 
         Vector3 origin = RosToUnityPosition(pos);
         Matrix4x4 R = Matrix4x4.Rotate(quat);
-
-        Vector3 x = origin + R.MultiplyVector(Vector3.right) * axisLength;
-        Vector3 y = origin + R.MultiplyVector(Vector3.up) * axisLength;
-        Vector3 z = origin + R.MultiplyVector(Vector3.forward) * axisLength;
+        Vector3 x = origin + R.MultiplyVector(Vector3.right).normalized * axisLength;
+        Vector3 y = origin + R.MultiplyVector(Vector3.up).normalized * axisLength;
+        Vector3 z = origin + R.MultiplyVector(Vector3.forward).normalized * axisLength;
 
         Vector2Int origin_px = ProjectToPixel(origin, calib);
         Vector2Int x_px = ProjectToPixel(x, calib);
@@ -174,6 +173,7 @@ public class TipVisualNew : MonoBehaviour
 
         return axisPixels;
     }
+    
     public static List<Vector2Int> GetProjectedAxesRigth(Vector3 pos, Quaternion quat, float axisLength = 0.1f)
     {
         List<Vector2Int> axisPixels = new List<Vector2Int>();
@@ -181,9 +181,9 @@ public class TipVisualNew : MonoBehaviour
         Vector3 origin = RosToUnityPosition(pos);
         Matrix4x4 R = Matrix4x4.Rotate(quat);
 
-        Vector3 x = origin + R.MultiplyVector(Vector3.right) * axisLength;
-        Vector3 y = origin + R.MultiplyVector(Vector3.up) * axisLength;
-        Vector3 z = origin + R.MultiplyVector(Vector3.forward) * axisLength;
+        Vector3 x = origin + R.MultiplyVector(Vector3.right).normalized * axisLength;
+        Vector3 y = origin + R.MultiplyVector(Vector3.up).normalized * axisLength;
+        Vector3 z = origin + R.MultiplyVector(Vector3.forward).normalized * axisLength;
 
         Vector2Int origin_px = ProjectToPixel(origin, calibRight);
         Vector2Int x_px = ProjectToPixel(x, calibRight);
@@ -197,6 +197,9 @@ public class TipVisualNew : MonoBehaviour
 
         return axisPixels;
     }
+
+
+
     public static Vector3 RosToUnityPosition(Vector3 rosPos)
     {
         // Change Y and Z (--> in UDP.comm they are inverted wrt to ROS). The change of sign is an offset to solve projection problem --> Need to be changed

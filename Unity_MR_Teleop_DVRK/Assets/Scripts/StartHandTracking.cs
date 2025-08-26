@@ -71,7 +71,7 @@ public class StartHandTracking : MonoBehaviour
         dirZPxPSM2 = (zPxPSM2 - tipPxPSM2);
         float zPSM2 = 0.0f;
         float zPSM1 = 0.0f;
-        
+
         Vector2 offsetTipPxPSM1 = tipPxPSM1 + dirZPxPSM1.normalized * pixelOffsetPSM1;
         Vector2 offsetTipPxPSM2 = tipPxPSM2 + dirZPxPSM2.normalized * pixelOffsetPSM2;
 
@@ -79,16 +79,16 @@ public class StartHandTracking : MonoBehaviour
         uvPSM1 = new Vector2(offsetTipPxPSM1.x / imageSizePx.x, offsetTipPxPSM1.y / imageSizePx.y);
         uvPSM2 = new Vector2(offsetTipPxPSM2.x / imageSizePx.x, offsetTipPxPSM2.y / imageSizePx.y);
         Vector3 localPointPSM1 = new Vector3(
-            (uvPSM1.x - 0.5f) *  imageSizeMeters.x,
-            (0.5f - uvPSM1.y) *  imageSizeMeters.y,
+            (uvPSM1.x - 0.5f) * imageSizeMeters.x,
+            (0.5f - uvPSM1.y) * imageSizeMeters.y,
             0f
         );
         tipOnQuadPlanePSM1 = quad.transform.TransformPoint(localPointPSM1);
         worldPosPSM1 = quad.transform.position + quad.transform.right * localPointPSM1.x + quad.transform.up * localPointPSM1.y + quad.transform.forward * zPSM1;
 
         Vector3 localPointPSM2 = new Vector3(
-            (uvPSM2.x - 0.5f) *  imageSizeMeters.x,
-            (0.5f - uvPSM2.y) *  imageSizeMeters.y,
+            (uvPSM2.x - 0.5f) * imageSizeMeters.x,
+            (0.5f - uvPSM2.y) * imageSizeMeters.y,
             0f
         );
         tipOnQuadPlanePSM2 = quad.transform.TransformPoint(localPointPSM2);
@@ -104,8 +104,8 @@ public class StartHandTracking : MonoBehaviour
         zEnd = 0f;
 
         Vector3 localPointEndPSM1 = new Vector3(
-            (uvEndPSM1.x - 0.5f) *  imageSizeMeters.x,
-            (0.5f - uvEndPSM1.y) *  imageSizeMeters.y,
+            (uvEndPSM1.x - 0.5f) * imageSizeMeters.x,
+            (0.5f - uvEndPSM1.y) * imageSizeMeters.y,
             0
         );
 
@@ -119,15 +119,15 @@ public class StartHandTracking : MonoBehaviour
         tipOnQuadPlaneEndPSM2 = quad.transform.TransformPoint(localPointEndPSM2);
 
         worldPosEndPSM1 = quad.transform.position + quad.transform.right * localPointEndPSM1.x + quad.transform.up * localPointEndPSM1.y + quad.transform.forward * zEnd;
-        worldPosEndPSM2 = quad.transform.position + quad.transform.right * localPointEndPSM2.x + quad.transform.up * localPointEndPSM2.y + quad.transform.forward * zEnd;;
-                /*
-        if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
-        {
-            Destroy(cylinderPSM1);
-            Destroy(cylinderPSM2);
-            return;
-        }
-        */
+        worldPosEndPSM2 = quad.transform.position + quad.transform.right * localPointEndPSM2.x + quad.transform.up * localPointEndPSM2.y + quad.transform.forward * zEnd; ;
+        /*
+if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
+{
+    Destroy(cylinderPSM1);
+    Destroy(cylinderPSM2);
+    return;
+}
+*/
         if (cylinderPSM1 == null)
         {
             cylinderPSM1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -158,8 +158,8 @@ public class StartHandTracking : MonoBehaviour
         cylinderPSM1.transform.up = directionPSM1.normalized;
         cylinderPSM2.transform.up = directionPSM2.normalized;
 
-        cylinderPSM1.transform.localScale = new Vector3(0.30f, distancePSM1 / 2f, 0.65f);
-        cylinderPSM2.transform.localScale = new Vector3(0.30f, distancePSM2 / 2f, 0.65f);
+        cylinderPSM1.transform.localScale = new Vector3(0.2f, distancePSM1 / 2f, 0.6f);
+        cylinderPSM2.transform.localScale = new Vector3(0.2f, distancePSM2 / 2f, 0.6f);
 
         // Distance from hand to cylinder:
         smallDistancePSM1 = IsThumbNearCylinder(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, Handedness.Right, out distanceToSurfacePSM1);

@@ -600,7 +600,7 @@ MonoBehaviour:
   mainCamera: {fileID: 963194225}
   cameraZaxis: {fileID: 829750993}
   UDP: {fileID: 671443128}
-  scale: 0.0009
+  scale: 0.0008
   insertion_step: 0.003
   radius: 0.12
   distance: 0.015
@@ -614,7 +614,7 @@ MonoBehaviour:
   moveECM: {fileID: 716193420}
   txtQuadFixed: {fileID: 831608077}
   txtCameraFixed: {fileID: 336906984}
-  inactivityThreshold: 10
+  inactivityThreshold: 6
   audioFeedback: {fileID: 699940413}
 --- !u!1 &266010601
 GameObject:
@@ -2151,7 +2151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Marker: {fileID: 318475007}
-  relativeOffset: {x: 0, y: -0.05, z: 0.55}
+  relativeOffset: {x: 0, y: -0.05, z: 0.6}
 --- !u!114 &746945114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4518,7 +4518,7 @@ MonoBehaviour:
   width: 2600
   height: 1024
   visualReg: 0
-  gripperLength: 0.05
+  gripperLength: 0.1
 --- !u!4 &1869107635
 Transform:
   m_ObjectHideFlags: 0

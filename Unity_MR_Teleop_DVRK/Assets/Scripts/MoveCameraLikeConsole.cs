@@ -288,7 +288,7 @@ public class MovecameraLikeConsole : MonoBehaviour
             Vector3 translation_hand = currentPosition - lastQuadPosition;
             translation_hand = quad.transform.InverseTransformVector(translation_hand); // Transform the movement from world to local space
             projected_Vector = new Vector3(translation_hand.x, translation_hand.y, 0f);
-            if (Mathf.Abs(translation_hand.x) > 0.0005f || Mathf.Abs(translation_hand.y) > 0.0005f)
+            if (Mathf.Abs(translation_hand.x) > 0.0004f || Mathf.Abs(translation_hand.y) > 0.0004f)
             {
                 float trans_x = Vector3.Normalize(translation_hand).x;
                 float trans_y = Vector3.Normalize(translation_hand).y;
@@ -356,7 +356,7 @@ public class MovecameraLikeConsole : MonoBehaviour
         isOpen = true;
         //homeButton.SetActive(true);
         motionFilter = new MotionFilter();
-        motionFilter.smoothingFactor = 0.87f;
+        motionFilter.smoothingFactor = 0.47f;
         quad.transform.Find("QuadBgLeft").GetComponent<MeshRenderer>().material.color = Color.cyan;
         quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.cyan;  
         BoxCollider[] colliders = quad.GetComponents<BoxCollider>();

@@ -2070,7 +2070,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.059999995, y: -0.547, z: 2.5}
-  m_LocalScale: {x: 0.29, y: 0.22843078, z: 0.17102563}
+  m_LocalScale: {x: 0.26, y: 0.20480001, z: 0.15333332}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2031936301}
@@ -4518,7 +4518,7 @@ MonoBehaviour:
   width: 2600
   height: 1024
   visualReg: 0
-  gripperLength: 0.1
+  gripperLength: 500
 --- !u!4 &1869107635
 Transform:
   m_ObjectHideFlags: 0

@@ -61,8 +61,8 @@ public class StartHandTracking : MonoBehaviour
 
     void Update()
     {
-        List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat, 0.3f);
-        List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat, 0.3f);
+        List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat, 500f);
+        List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat, 500f);
         tipPxPSM1 = TipVisualNew.tipPositionPSM1;
         zPxPSM1 = axesPSM1[3];
         dirZPxPSM1 = (zPxPSM1 - tipPxPSM1);

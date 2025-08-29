@@ -204,7 +204,7 @@ public class UDPComm : MonoBehaviour
             Matrix4x4 temp = parser.GetMatrix4X4(dVRK_msg_PSM2);
             //Debug.Log("dVRK rot: " + temp.rotation);
             EE_pos_PSM2 = parser.GetPos(dVRK_msg_PSM2);
-            //Debug.Log("psm2 POS: " + EE_pos_PSM2);
+            Debug.Log("psm2 POS: " + EE_pos_PSM2);
         }
         else if (parser.StringMatch(dVRK_msg_PSM2, "\"setpoint_js\":"))
         {

@@ -185,7 +185,7 @@ MonoBehaviour:
   badHandTracking: {fileID: 715794253}
   txtQuadFixed: {fileID: 831608077}
   txtCameraFixed: {fileID: 336906984}
-  showVideo: 0
+  showVideo: 1
 --- !u!114 &43717180
 MonoBehaviour:
   m_ObjectHideFlags: 0

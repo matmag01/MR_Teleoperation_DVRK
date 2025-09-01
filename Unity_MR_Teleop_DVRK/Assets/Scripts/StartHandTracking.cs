@@ -52,6 +52,9 @@ public class StartHandTracking : MonoBehaviour
     public static bool smallDistancePSM2 = false;
     float distanceToSurfacePSM2;
 
+    public Material cylinderPSM1Material;
+    public Material cylinderPSM2Material;
+
     void Start()
     {
         imageSizePx = new Vector2(width, height);
@@ -61,8 +64,8 @@ public class StartHandTracking : MonoBehaviour
 
     void Update()
     {
-        List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat, 500f);
-        List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat, 500f);
+        List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat, 550f);
+        List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat, 550f);
         tipPxPSM1 = TipVisualNew.tipPositionPSM1;
         zPxPSM1 = axesPSM1[3];
         dirZPxPSM1 = (zPxPSM1 - tipPxPSM1);
@@ -131,7 +134,8 @@ if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
         if (cylinderPSM1 == null)
         {
             cylinderPSM1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            //cylinderPSM1.GetComponent<Renderer>().material.color = Color.gray;
+            if (cylinderPSM1Material != null)
+                //cylinderPSM1.GetComponent<Renderer>().material = cylinderPSM1Material;
             cylinderPSM1.GetComponent<Renderer>().enabled = false;
             Destroy(cylinderPSM1.GetComponent<Collider>());
         }
@@ -139,6 +143,8 @@ if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
         if (cylinderPSM2 == null)
         {
             cylinderPSM2 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            if (cylinderPSM2Material != null)
+                //cylinderPSM2.GetComponent<Renderer>().material = cylinderPSM2Material;
             cylinderPSM2.GetComponent<Renderer>().enabled = false;
             Destroy(cylinderPSM2.GetComponent<Collider>());
         }
@@ -158,8 +164,8 @@ if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
         cylinderPSM1.transform.up = directionPSM1.normalized;
         cylinderPSM2.transform.up = directionPSM2.normalized;
 
-        cylinderPSM1.transform.localScale = new Vector3(0.2f, distancePSM1 / 2f, 0.6f);
-        cylinderPSM2.transform.localScale = new Vector3(0.2f, distancePSM2 / 2f, 0.6f);
+        cylinderPSM1.transform.localScale = new Vector3(0.05f, distancePSM1 / 2f, 0.14f);
+        cylinderPSM2.transform.localScale = new Vector3(0.05f, distancePSM2 / 2f, 0.14f);
 
         // Distance from hand to cylinder:
         smallDistancePSM1 = IsThumbNearCylinder(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, Handedness.Right, out distanceToSurfacePSM1);

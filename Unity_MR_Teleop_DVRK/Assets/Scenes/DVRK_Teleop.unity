@@ -2070,7 +2070,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.059999995, y: -0.547, z: 2.5}
-  m_LocalScale: {x: 0.26, y: 0.20480001, z: 0.15333332}
+  m_LocalScale: {x: 0.29, y: 0.22843078, z: 0.17102562}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2031936301}
@@ -2151,7 +2151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Marker: {fileID: 318475007}
-  relativeOffset: {x: 0, y: -0.05, z: 0.55}
+  relativeOffset: {x: 0, y: -0.06, z: 0.6}
 --- !u!114 &746945114
 MonoBehaviour:
   m_ObjectHideFlags: 0

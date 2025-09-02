@@ -2377,6 +2377,8 @@ MonoBehaviour:
   quad: {fileID: 746945108}
   pixelOffsetPSM2: 0
   pixelOffsetPSM1: 0
+  cylinderPSM1Material: {fileID: 2100000, guid: 8ee8de90c691d9643ae15f0ec0cb2f88, type: 2}
+  cylinderPSM2Material: {fileID: 2100000, guid: 8ee8de90c691d9643ae15f0ec0cb2f88, type: 2}
 --- !u!1 &829750993
 GameObject:
   m_ObjectHideFlags: 0

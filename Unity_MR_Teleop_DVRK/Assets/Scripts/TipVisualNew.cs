@@ -37,6 +37,7 @@ public class TipVisualNew : MonoBehaviour
     void Start()
     {
         // Calibration matrix 3x3
+        /*
         var matrixData1280x1024 = new float[,]
         {
             { 1621.6418f, 0f, 498.3872f },
@@ -67,8 +68,22 @@ public class TipVisualNew : MonoBehaviour
             { 0f, 1925.85373f, 570.27438f, 0f },
             { 0f, 0f, 1f, 0f }
         };
-        calib = Matrix<float>.Build.DenseOfArray(matrixData1280x1024ProjNew);
-        calibRight = Matrix<float>.Build.DenseOfArray(matrixData1280x1024ProjRightNew);
+        */
+        var matrixDataGstreamLeft = new float[,]
+        {
+            { 1898.78607f, 0f, 986.48248f, 0f },
+            { 0f, 1898.78607f, 509.79192f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+        var matrixDataGstreamRight = new float[,]
+        {
+            { 1898.78607f, 0f, 986.48248f, 10.45719f },
+            { 0f, 1898.78607f, 509.79192f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+
+        calib = Matrix<float>.Build.DenseOfArray(matrixDataGstreamLeft);
+        calibRight = Matrix<float>.Build.DenseOfArray(matrixDataGstreamRight);
     }
 
     void Update()
@@ -87,7 +102,7 @@ public class TipVisualNew : MonoBehaviour
         tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos), calib);
         tipPositionPSM2Right = ProjectToPixel(RosToUnityPosition(EE2_pos), calibRight);
         tipPositionPSM1Right = ProjectToPixel(RosToUnityPosition(EE1_pos), calibRight);
-        
+        print($"Tip PSM1: {tipPositionPSM1}");
         // axis computation
         //axesPSM2 = GetProjectedAxes(EE2_pos, EE2_quat);
 
@@ -95,12 +110,11 @@ public class TipVisualNew : MonoBehaviour
     }
     public static Vector2Int ProjectToPixel(Vector3 pos,  Matrix<float> projectionMatrix)
     {
-        // 1. Create the 4D homogeneous vector from the 3D point.
-        // The fourth component is crucial for the matrix multiplication.
+        // 1. Create the 4D homogeneous vector from the 3D point
         float[] point3D_homogeneous = new float[] { pos.x, pos.y, pos.z, 1.0f };
 
-        // 2. Perform the manual 3x4 matrix by 4x1 vector multiplication.
-        // The result is a 3x1 vector (in homogeneous coordinates).
+        // 2. Perform the manual 3x4 matrix by 4x1 vector multiplication
+        // The result is a 3x1 vector (in homogeneous coordinates)
         float u = (projectionMatrix[0, 0] * point3D_homogeneous[0]) +
                   (projectionMatrix[0, 1] * point3D_homogeneous[1]) +
                   (projectionMatrix[0, 2] * point3D_homogeneous[2]) +
@@ -116,8 +130,7 @@ public class TipVisualNew : MonoBehaviour
                   (projectionMatrix[2, 2] * point3D_homogeneous[2]) +
                   (projectionMatrix[2, 3] * point3D_homogeneous[3]);
 
-        // 3. Normalize the coordinates to get the final pixel position.
-        // This is done by dividing the first two components by the third one.
+        // 3. Normalize the coordinates to get the final pixel position
         if (w == 0) 
         {
             Debug.LogError("The third component of the projected vector is zero. Cannot normalize.");
@@ -161,7 +174,7 @@ public class TipVisualNew : MonoBehaviour
         Vector3 origin = RosToUnityPosition(pos);
         Matrix4x4 R = Matrix4x4.Rotate(quat);
 
-        // Assi unitari nello spazio 3D
+        // Axis unit vectors in 3D space
         Vector3[] axes = new Vector3[]
         {
             R.MultiplyVector(Vector3.right),
@@ -169,23 +182,21 @@ public class TipVisualNew : MonoBehaviour
             R.MultiplyVector(Vector3.forward)
         };
 
-        // Origine in pixel
+        // Origin in pixels
         Vector2Int origin_px = ProjectToPixel(origin, calib);
         axisPixels.Add(origin_px);
 
         foreach (var axis in axes)
         {
-            // Proietto un punto sull'asse
+            // Project a point on the axis
             Vector3 end3D = origin + axis;
             Vector2Int end_px = ProjectToPixel(end3D, calib);
 
-            // Direzione in float (Vector2), non in int
             Vector2 dirPx = ((Vector2)end_px - (Vector2)origin_px).normalized;
 
-            // Scalato a lunghezza fissa in pixel
+            // Scaled to a fixed length in pixels
             Vector2 fixedEnd = (Vector2)origin_px + dirPx * axisLengthPx;
 
-            // Torno a interi
             axisPixels.Add(Vector2Int.RoundToInt(fixedEnd));
         }
 
@@ -199,7 +210,7 @@ public class TipVisualNew : MonoBehaviour
         Vector3 origin = RosToUnityPosition(pos);
         Matrix4x4 R = Matrix4x4.Rotate(quat);
 
-        // Assi unitari nello spazio 3D
+        // Axis unit vectors in 3D space
         Vector3[] axes = new Vector3[]
         {
             R.MultiplyVector(Vector3.right),
@@ -207,54 +218,48 @@ public class TipVisualNew : MonoBehaviour
             R.MultiplyVector(Vector3.forward)
         };
 
-        // Origine in pixel
+        // Origin in pixels
         Vector2Int origin_px = ProjectToPixel(origin, calibRight);
         axisPixels.Add(origin_px);
 
         foreach (var axis in axes)
         {
-            // Proietto un punto sull'asse
+            // Project a point on the axis
             Vector3 end3D = origin + axis;
             Vector2Int end_px = ProjectToPixel(end3D, calibRight);
-
-            // Direzione in float (Vector2), non in int
             Vector2 dirPx = ((Vector2)end_px - (Vector2)origin_px).normalized;
 
-            // Scalato a lunghezza fissa in pixel
+            // Scaled to a fixed length in pixels
             Vector2 fixedEnd = (Vector2)origin_px + dirPx * axisLengthPx;
 
-            // Torno a interi
             axisPixels.Add(Vector2Int.RoundToInt(fixedEnd));
         }
 
         return axisPixels;
     }
-    /*
-    public static List<Vector2Int> GetProjectedAxesRigth(Vector3 pos, Quaternion quat, float axisLength = 0.1f)
+    Matrix<float> ResizeMatrix(Matrix<float> original, Vector2Int original_size, Vector2Int new_size)
     {
-        List<Vector2Int> axisPixels = new List<Vector2Int>();
+        // Obtain the intrinsic parameters from the original matrix
+        float cx = original[0, 2];
+        float cy = original[1, 2];
 
-        Vector3 origin = RosToUnityPosition(pos);
-        Matrix4x4 R = Matrix4x4.Rotate(quat);
+        // Compute the scaling factors
+        float scaleX = (float)new_size.x / original_size.x;
+        float scaleY = (float)new_size.y / original_size.y;
 
-        Vector3 x = origin + R.MultiplyVector(Vector3.right) * axisLength;
-        Vector3 y = origin + R.MultiplyVector(Vector3.up) * axisLength;
-        Vector3 z = origin + R.MultiplyVector(Vector3.forward) * axisLength;
+        // Apply the scaling to the intrinsic parameters
+        float newCx = cx * scaleX;
+        float newCy = cy * scaleY;
 
-        Vector2Int origin_px = ProjectToPixel(origin, calibRight);
-        Vector2Int x_px = ProjectToPixel(x, calibRight);
-        Vector2Int y_px = ProjectToPixel(y, calibRight);
-        Vector2Int z_px = ProjectToPixel(z, calibRight);
+        // Create a new matrix with the updated intrinsic parameters
+        Matrix<float> newMatrix = original.Clone();
 
-        axisPixels.Add(origin_px);
-        axisPixels.Add(x_px);
-        axisPixels.Add(y_px);
-        axisPixels.Add(z_px);
+        // Replace the intrinsic parameters in the new matrix
+        newMatrix[0, 2] = newCx;
+        newMatrix[1, 2] = newCy;
 
-        return axisPixels;
+        return newMatrix;
     }
-
-    */
 
     public static Vector3 RosToUnityPosition(Vector3 rosPos)
     {

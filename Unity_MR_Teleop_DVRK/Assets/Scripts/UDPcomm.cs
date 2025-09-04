@@ -120,7 +120,7 @@ public class UDPComm : MonoBehaviour
         {
 
             ECM_Joints = parser.GetECMJointPositions(dVRK_msg_ECM);
-            //Debug.Log("ECM_Joint positions are: " + ECM_Joints);
+            Debug.Log("ECM_Joint positions are: " + ECM_Joints);
         }
         // Start receiving messages again
         socket_ECM.BeginReceiveFrom(data_ECM, 0, data_ECM.Length, SocketFlags.None, ref remote_ECM, new AsyncCallback(ReceiveCallbackECM), socket_ECM);

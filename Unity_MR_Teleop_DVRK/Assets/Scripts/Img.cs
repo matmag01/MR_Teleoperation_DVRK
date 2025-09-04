@@ -21,8 +21,8 @@ public class Img : MonoBehaviour
     // private variables
     /*< 2d texture >*/
     static public Texture2D tex2d_stereo;
-    public int width = 1300*2;
-    public int height = 1024;
+    public int width = 1920*2;
+    public int height = 1080;
     public bool visualReg = false;
 
     /*< ROS >*/

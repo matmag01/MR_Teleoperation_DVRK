@@ -66,9 +66,16 @@ MonoBehaviour:
       description: Trigger
       axisConstraint: 3
   - localizationKey: 
-    keyword: 
+    keyword: Rotate
     keyCode: 0
     action:
-      id: 0
+      id: 6
+      description: Trigger
+      axisConstraint: 3
+  - localizationKey: 
+    keyword: Translate
+    keyCode: 0
+    action:
+      id: 6
       description: Trigger
       axisConstraint: 3

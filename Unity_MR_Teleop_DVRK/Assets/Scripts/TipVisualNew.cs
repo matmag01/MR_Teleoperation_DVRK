@@ -28,7 +28,6 @@ public class TipVisualNew : MonoBehaviour
     public static float zCoordinatePSM1;
     float deltaInsertion;
     List<Vector2Int> axesPSM2;
-    public float startInsertionPosition;
     public static int width = 1300;
     public static int height = 1024;
     public static int shiftX = 0;
@@ -68,20 +67,45 @@ public class TipVisualNew : MonoBehaviour
             { 0f, 1925.85373f, 570.27438f, 0f },
             { 0f, 0f, 1f, 0f }
         };
-        */
+        
         var matrixDataGstreamLeft = new float[,]
         {
-            { 1898.78607f, 0f, 986.48248f, 0f },
-            { 0f, 1898.78607f, 509.79192f, 0f },
+            { 1161.71027f, 0f, 531.93198f, 0f },
+            { 0f, 1161.71027f, 341.46125f, 0f },
             { 0f, 0f, 1f, 0f }
         };
         var matrixDataGstreamRight = new float[,]
         {
-            { 1898.78607f, 0f, 986.48248f, 10.45719f },
-            { 0f, 1898.78607f, 509.79192f, 0f },
+            { 1161.71027f, 0f, 531.93198f, 6.2986f },
+            { 0f, 1161.71027f, 341.46125f, 0f },
             { 0f, 0f, 1f, 0f }
         };
-
+        
+        var matrixDataGstreamLeft = new float[,]
+        {
+            { 1755.62582f, 0f, 836.81531f, 0f },
+            { 0f, 1755.62582f, 509.52462f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+        var matrixDataGstreamRight = new float[,]
+        {
+            { 1755.62582f, 0f, 836.81531f, 9.30499f },
+            { 0f, 1755.62582f, 509.52462f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+        */
+        var matrixDataGstreamLeft = new float[,]
+        {
+            { 1905.46146f, 0f, 668.38528f, 0f },
+            { 0f, 1905.46146f, 498.80738f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+        var matrixDataGstreamRight = new float[,]
+        {
+            {1905.46146f, 0f, 668.38528f, 10.55401f },
+            { 0f, 1905.46146f, 498.80738f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
         calib = Matrix<float>.Build.DenseOfArray(matrixDataGstreamLeft);
         calibRight = Matrix<float>.Build.DenseOfArray(matrixDataGstreamRight);
     }

@@ -98,11 +98,11 @@ public class HandTracking : MonoBehaviour
     {
         thumbMarker = Instantiate(sphere_marker, this.transform);
         handAxis = Instantiate(axis, this.transform);
-        handAxis.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
+        handAxis.transform.localScale = new Vector3(0.015f, 0.015f, 0.025f);
         PSM1MotionFilter = new MotionFilter();
-        PSM1MotionFilter.smoothingFactor = 0.85f;
+        PSM1MotionFilter.smoothingFactor = 0.61f;
         PSM2MotionFilter = new MotionFilter();
-        PSM2MotionFilter.smoothingFactor = 0.85f;
+        PSM2MotionFilter.smoothingFactor = 0.61f;
         firstTime = true;
 
     }
@@ -184,7 +184,7 @@ public class HandTracking : MonoBehaviour
             {
                 if (PSM_flag == PSM1)
                 {
-                    if (!StartHandTracking.smallDistancePSM1)
+                    if (!InstrumentDrawing.smallDistancePSM1)
                     {
                         Debug.Log("STOP: ");
                         if (PSM_flag == PSM1)
@@ -209,7 +209,7 @@ public class HandTracking : MonoBehaviour
                 }
                 if (PSM_flag == PSM2)
                 {
-                    if (!StartHandTracking.smallDistancePSM2)
+                    if (!InstrumentDrawing.smallDistancePSM2)
                     {
                         Debug.Log("STOP: ");
                         if (PSM_flag == PSM2)
@@ -242,7 +242,7 @@ public class HandTracking : MonoBehaviour
                 // Move or clutch only if camera is fixed
                 if (!MovecameraLikeConsole.isOpen)
                 {
-                    if (pinch_dist < clutch_distance + 0.005)
+                    if (pinch_dist < clutch_distance + 0.009)
                     {
                         // Clutch state
                         if (PSM_flag == PSM1)
@@ -426,7 +426,7 @@ public class HandTracking : MonoBehaviour
         }
         if (!stopJawAngle)
         {
-            toSend = ((desAngle - jaw_angle) / 7.0f) * T + jaw_angle;
+            toSend = ((desAngle - jaw_angle) / 5.0f) * T + jaw_angle;
             T += Time.deltaTime;
         }
         return toSend;

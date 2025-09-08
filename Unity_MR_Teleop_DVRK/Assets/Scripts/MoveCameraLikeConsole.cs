@@ -55,6 +55,7 @@ public class MovecameraLikeConsole : MonoBehaviour
     Quaternion quadStartRotation;
     Quaternion lastQuadRotation1;
     bool canMove = false;
+    bool CanRotateCamera = false;
     bool toReset = false;
     float count = 0f;
     private float inactivityTimer = 0f;
@@ -120,7 +121,7 @@ public class MovecameraLikeConsole : MonoBehaviour
             if (canMove && !toReset)
             {
                 CheckWhich();
-                if (!isForward && !isBackward && !isRotate)
+                if (!isForward && !isBackward && !isRotate && !CanRotateCamera)
                 {
                     MoveCP();
                 }
@@ -172,7 +173,7 @@ public class MovecameraLikeConsole : MonoBehaviour
         //float rot = constrainAngle((quad.transform.localEulerAngles.z -quadStartRotation.eulerAngles.z) * Mathf.Deg2Rad);
         float rot = constrainAngle((mainCamera.transform.localEulerAngles.z - cameraLocalStartRotation.eulerAngles.z) * Mathf.Deg2Rad);
         //directionArrow.gameObject.SetActive(false);
-        if (trans.z > distance)
+        if (trans.z > distance && !CanRotateCamera)
         {
             /*
             if (!audioFeedback.GetComponent<AudioFeedback>().isCorrosing)
@@ -186,7 +187,7 @@ public class MovecameraLikeConsole : MonoBehaviour
             ShowText(insertion);
             forwardCamera();
         }
-        else if (trans.z < -distance)
+        else if (trans.z < -distance && !CanRotateCamera)
         {
             /*
             if (!audioFeedback.GetComponent<AudioFeedback>().isCorrosing)
@@ -200,7 +201,7 @@ public class MovecameraLikeConsole : MonoBehaviour
             ShowText(extraction);
             backwardCamera();
         }
-        else if (Mathf.Abs(rot) > 10f * Mathf.Deg2Rad && projected_Vector.magnitude < radius)
+        else if (Mathf.Abs(rot) > 10f * Mathf.Deg2Rad && projected_Vector.magnitude < radius && CanRotateCamera)
         {
             Debug.Log("rot: " + rot * Mathf.Rad2Deg);
             /*
@@ -485,8 +486,14 @@ public class MovecameraLikeConsole : MonoBehaviour
         UDP.GetComponent<UDPComm>().UDPsendECM(jointsMessage);
         SetCameraStartRotation();
     }
-    
-
+    public void CanRotate()
+    {
+        CanRotateCamera = true;
+    }
+    public void CannotRotate()
+    {
+        CanRotateCamera = false;
+    }
     // convert quaternion to rotation matrix
     public static Matrix<float> Quat2Rot(Quaternion q)
     {

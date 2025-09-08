@@ -13,11 +13,12 @@ public class Video: MonoBehaviour
     public float contrast = 1.25f;
     public bool visualReg = false;
     public float gripperLength;
+    public bool drawGrippers = true;
 
     // private variables
     static public Texture2D tex2d_stereo;
-    public int width = 1920 * 2;
-    public int height = 1080;
+    public int width = 1300 * 2;
+    public int height = 1024;
 
     // TCP variables
     private TcpClient client;
@@ -118,8 +119,8 @@ public class Video: MonoBehaviour
 
                 endPSM1Left = axesPSM1[3];
                 endPSM2Left = axesPSM2[3];
-                endPSM1Right = axesPSM1Right[3] + new Vector2Int(1300, 0);
-                endPSM2Right = axesPSM2Right[3] + new Vector2Int(1300, 0);
+                endPSM1Right = axesPSM1Right[3] + new Vector2Int(width/2, 0);
+                endPSM2Right = axesPSM2Right[3] + new Vector2Int(width/2, 0);
 
                 // Extract pixel colors for manipulation (contrast, markers, grippers)
                 Color[] pixels = tex2d_stereo.GetPixels();
@@ -137,21 +138,22 @@ public class Video: MonoBehaviour
                 {
                     DrawTipMarkerLite(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM2);
                     DrawTipMarkerLite(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM1);
-                    DrawTipMarkerLite(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM2Right + new Vector2Int(1300, 0));
-                    DrawTipMarkerLite(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM1Right + new Vector2Int(1300, 0));
+                    DrawTipMarkerLite(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM2Right + new Vector2Int(width/2, 0));
+                    DrawTipMarkerLite(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM1Right + new Vector2Int(width/2, 0));
                 }
-
-                // Gripper projection
-                DrawGripper(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM1, endPSM1Left, Color.blue, isRightImg = false, 0.7f);
-                DrawGripper(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM1Right + new Vector2Int(1300, 0), endPSM1Right, Color.blue, isRightImg = true, 0.7f);
-                DrawGripper(pixels, tex2d_stereo, endPSM2Left, TipVisualNew.tipPositionPSM2, Color.blue, isRightImg = false, 0.7f);
-                DrawGripper(pixels, tex2d_stereo, endPSM2Right, TipVisualNew.tipPositionPSM2Right + new Vector2Int(1300, 0), Color.blue, isRightImg = true, 0.7f);
+                
+                if (drawGrippers)
+                {
+                    // Gripper projection
+                    DrawGripper(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM1, endPSM1Left, Color.blue, isRightImg = false, 0.7f);
+                    DrawGripper(pixels, tex2d_stereo, TipVisualNew.tipPositionPSM1Right + new Vector2Int(width / 2, 0), endPSM1Right, Color.blue, isRightImg = true, 0.7f);
+                    DrawGripper(pixels, tex2d_stereo, endPSM2Left, TipVisualNew.tipPositionPSM2, Color.blue, isRightImg = false, 0.7f);
+                    DrawGripper(pixels, tex2d_stereo, endPSM2Right, TipVisualNew.tipPositionPSM2Right + new Vector2Int(width / 2, 0), Color.blue, isRightImg = true, 0.7f);
+                }
 
                 tex2d_stereo.SetPixels(pixels);
                 tex2d_stereo.Apply();
-
                 quad.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", tex2d_stereo);
-
                 newDataReady = false;
             }
         }
@@ -189,16 +191,17 @@ public class Video: MonoBehaviour
     {
         int texHeight = tex.height;
         int texWidth = tex.width;
-        int halfLength = 25; // 50px total thickness
+        int halfThickness = 25; // 50px total thickness
+        int semiRadius = halfThickness;
 
-        // Tip Z-axis
-        Vector2 dir = (p2 - p1);
+        // Direction from p1 to p2
+        Vector2 dir = p2 - p1;
         dir.Normalize();
 
         // Orthogonal direction
-        Vector2 perp = new Vector2(-dir.y, dir.x) * halfLength;
+        Vector2 perp = new Vector2(-dir.y, dir.x) * halfThickness;
 
-        // Quad verteces
+        // Rectangle vertices
         Vector2 a = p1 + perp;
         Vector2 b = p1 - perp;
         Vector2 c = p2 - perp;
@@ -207,7 +210,7 @@ public class Video: MonoBehaviour
         Vector2Int[] verts = { Vector2Int.RoundToInt(a), Vector2Int.RoundToInt(b),
                             Vector2Int.RoundToInt(c), Vector2Int.RoundToInt(d) };
 
-        // For each pixel --> Check if inside the BB
+        // Draw rectangle part
         int minX = Mathf.Max(0, verts.Min(v => v.x));
         int maxX = Mathf.Min(texWidth - 1, verts.Max(v => v.x));
         int minY = Mathf.Max(0, verts.Min(v => v.y));
@@ -220,13 +223,9 @@ public class Video: MonoBehaviour
                 if (PointInQuad(new Vector2Int(x, y), verts))
                 {
                     float pixelAlpha = alpha;
-
-                    // If Right img and quad goes in left image
-                    if (isRight && x < 1300)
-                        pixelAlpha = 0f;
-                    if (!isRight && x > 1300)
-                        pixelAlpha = 0f;
-                    int yy = texHeight - 1 - y; // Vertical flip to match unity texture
+                    if (isRight && x < texWidth/2) pixelAlpha = 0f;
+                    if (!isRight && x > texWidth/2) pixelAlpha = 0f;
+                    int yy = texHeight - 1 - y;
                     int idx = yy * texWidth + x;
                     pixels[idx] = Blend(pixels[idx], color, pixelAlpha);
                 }

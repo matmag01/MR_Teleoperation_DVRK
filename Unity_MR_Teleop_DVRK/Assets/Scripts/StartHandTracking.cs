@@ -12,8 +12,6 @@ using System.Globalization;
 public class StartHandTracking : MonoBehaviour
 {
     public GameObject quad;
-    public float pixelOffsetPSM2 = 0f;
-    public float pixelOffsetPSM1 = 0f;
     private GameObject cylinderPSM2;
     private GameObject cylinderPSM1;
     private int width = 1300;
@@ -30,10 +28,6 @@ public class StartHandTracking : MonoBehaviour
     Vector2 zEndPxPSM1;
     Vector2 uvEndPSM1;
     Vector3 tipOnQuadPlaneEndPSM1;
-    private float zEnd;
-    Vector3 directionPSM1;
-    float distancePSM1;
-    Vector3 midpointPSM1;
     public static bool smallDistancePSM1 = false;
     float distanceToSurfacePSM1;
     Vector2 tipPxPSM2;
@@ -46,12 +40,8 @@ public class StartHandTracking : MonoBehaviour
     Vector2 zEndPxPSM2;
     Vector2 uvEndPSM2;
     Vector3 tipOnQuadPlaneEndPSM2;
-    Vector3 directionPSM2;
-    float distancePSM2;
-    Vector3 midpointPSM2;
     public static bool smallDistancePSM2 = false;
     float distanceToSurfacePSM2;
-
     public Material cylinderPSM1Material;
     public Material cylinderPSM2Material;
 
@@ -64,113 +54,89 @@ public class StartHandTracking : MonoBehaviour
 
     void Update()
     {
-        List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat, 550f);
-        List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat, 550f);
+        // Get projected axes and tip positions
+        List<Vector2Int> axesPSM1 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE1_pos, TipVisualNew.EE1_quat, 600f);
+        List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat, 600f);
         tipPxPSM1 = TipVisualNew.tipPositionPSM1;
         zPxPSM1 = axesPSM1[3];
         dirZPxPSM1 = (zPxPSM1 - tipPxPSM1);
         tipPxPSM2 = TipVisualNew.tipPositionPSM2;
         zPxPSM2 = axesPSM2[3];
-        dirZPxPSM2 = (zPxPSM2 - tipPxPSM2);
-        float zPSM2 = 0.0f;
-        float zPSM1 = 0.0f;
+        dirZPxPSM2 = zPxPSM2 - tipPxPSM2;
 
-        Vector2 offsetTipPxPSM1 = tipPxPSM1 + dirZPxPSM1.normalized * pixelOffsetPSM1;
-        Vector2 offsetTipPxPSM2 = tipPxPSM2 + dirZPxPSM2.normalized * pixelOffsetPSM2;
+        // Cylinder creation
+        cylinderPSM1 = EnsureCylinder(cylinderPSM1, cylinderPSM1Material);
+        cylinderPSM2 = EnsureCylinder(cylinderPSM2, cylinderPSM2Material);
 
-        // From pixel to world position (in the quad)
-        uvPSM1 = new Vector2(offsetTipPxPSM1.x / imageSizePx.x, offsetTipPxPSM1.y / imageSizePx.y);
-        uvPSM2 = new Vector2(offsetTipPxPSM2.x / imageSizePx.x, offsetTipPxPSM2.y / imageSizePx.y);
-        Vector3 localPointPSM1 = new Vector3(
-            (uvPSM1.x - 0.5f) * imageSizeMeters.x,
-            (0.5f - uvPSM1.y) * imageSizeMeters.y,
-            0f
-        );
-        tipOnQuadPlanePSM1 = quad.transform.TransformPoint(localPointPSM1);
-        worldPosPSM1 = quad.transform.position + quad.transform.right * localPointPSM1.x + quad.transform.up * localPointPSM1.y + quad.transform.forward * zPSM1;
+        // Calculate positions
+        uvPSM1 = new Vector2(tipPxPSM1.x / imageSizePx.x, tipPxPSM1.y / imageSizePx.y);
+        uvPSM2 = new Vector2(tipPxPSM2.x / imageSizePx.x, tipPxPSM2.y / imageSizePx.y);
 
-        Vector3 localPointPSM2 = new Vector3(
-            (uvPSM2.x - 0.5f) * imageSizeMeters.x,
-            (0.5f - uvPSM2.y) * imageSizeMeters.y,
-            0f
-        );
-        tipOnQuadPlanePSM2 = quad.transform.TransformPoint(localPointPSM2);
-        worldPosPSM2 = quad.transform.position + quad.transform.right * localPointPSM2.x + quad.transform.up * localPointPSM2.y + quad.transform.forward * zPSM2;
+        tipOnQuadPlanePSM1 = PixelToWorld(uvPSM1, quad, imageSizeMeters);
+        tipOnQuadPlanePSM2 = PixelToWorld(uvPSM2, quad, imageSizeMeters);
+
+        worldPosPSM1 = tipOnQuadPlanePSM1;
+        worldPosPSM2 = tipOnQuadPlanePSM2;
 
         // End Pixel Position
-        zEndPxPSM1 = offsetTipPxPSM1 + dirZPxPSM1 * 2f;
-        zEndPxPSM2 = offsetTipPxPSM2 + dirZPxPSM2 * 2f;
+        zEndPxPSM1 = tipPxPSM1 + dirZPxPSM1;
+        zEndPxPSM2 = tipPxPSM2 + dirZPxPSM2;
 
         uvEndPSM1 = new Vector2(zEndPxPSM1.x / imageSizePx.x, zEndPxPSM1.y / imageSizePx.y);
         uvEndPSM2 = new Vector2(zEndPxPSM2.x / imageSizePx.x, zEndPxPSM2.y / imageSizePx.y);
 
-        zEnd = 0f;
+        tipOnQuadPlaneEndPSM1 = PixelToWorld(uvEndPSM1, quad, imageSizeMeters);
+        tipOnQuadPlaneEndPSM2 = PixelToWorld(uvEndPSM2, quad, imageSizeMeters);
 
-        Vector3 localPointEndPSM1 = new Vector3(
-            (uvEndPSM1.x - 0.5f) * imageSizeMeters.x,
-            (0.5f - uvEndPSM1.y) * imageSizeMeters.y,
-            0
-        );
+        worldPosEndPSM1 = tipOnQuadPlaneEndPSM1;
+        worldPosEndPSM2 = tipOnQuadPlaneEndPSM2;
 
-        Vector3 localPointEndPSM2 = new Vector3(
-            (uvEndPSM2.x - 0.5f) * imageSizeMeters.x,
-            (0.5f - uvEndPSM2.y) * imageSizeMeters.y,
-            0
-        );
-
-        tipOnQuadPlaneEndPSM1 = quad.transform.TransformPoint(localPointEndPSM1);
-        tipOnQuadPlaneEndPSM2 = quad.transform.TransformPoint(localPointEndPSM2);
-
-        worldPosEndPSM1 = quad.transform.position + quad.transform.right * localPointEndPSM1.x + quad.transform.up * localPointEndPSM1.y + quad.transform.forward * zEnd;
-        worldPosEndPSM2 = quad.transform.position + quad.transform.right * localPointEndPSM2.x + quad.transform.up * localPointEndPSM2.y + quad.transform.forward * zEnd; ;
-        /*
-if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
-{
-    Destroy(cylinderPSM1);
-    Destroy(cylinderPSM2);
-    return;
-}
-*/
-        if (cylinderPSM1 == null)
-        {
-            cylinderPSM1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            if (cylinderPSM1Material != null)
-                //cylinderPSM1.GetComponent<Renderer>().material = cylinderPSM1Material;
-            cylinderPSM1.GetComponent<Renderer>().enabled = false;
-            Destroy(cylinderPSM1.GetComponent<Collider>());
-        }
-
-        if (cylinderPSM2 == null)
-        {
-            cylinderPSM2 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            if (cylinderPSM2Material != null)
-                //cylinderPSM2.GetComponent<Renderer>().material = cylinderPSM2Material;
-            cylinderPSM2.GetComponent<Renderer>().enabled = false;
-            Destroy(cylinderPSM2.GetComponent<Collider>());
-        }
-
-        directionPSM1 = worldPosPSM1 - worldPosEndPSM1;
-        directionPSM2 = worldPosPSM2 - worldPosEndPSM2;
-
-        distancePSM1 = directionPSM1.magnitude;
-        distancePSM2 = directionPSM2.magnitude;
-
-        midpointPSM1 = worldPosEndPSM1 + directionPSM1 / 2f;
-        midpointPSM2 = worldPosEndPSM2 + directionPSM2 / 2f;
-
-        cylinderPSM1.transform.position = midpointPSM1;
-        cylinderPSM2.transform.position = midpointPSM2;
-
-        cylinderPSM1.transform.up = directionPSM1.normalized;
-        cylinderPSM2.transform.up = directionPSM2.normalized;
-
-        cylinderPSM1.transform.localScale = new Vector3(0.05f, distancePSM1 / 2f, 0.14f);
-        cylinderPSM2.transform.localScale = new Vector3(0.05f, distancePSM2 / 2f, 0.14f);
+        // Cylinder transform setup
+        SetupCylinderTransform(cylinderPSM1, worldPosPSM1, worldPosEndPSM1);
+        SetupCylinderTransform(cylinderPSM2, worldPosPSM2, worldPosEndPSM2);
 
         // Distance from hand to cylinder:
         smallDistancePSM1 = IsThumbNearCylinder(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, Handedness.Right, out distanceToSurfacePSM1);
         smallDistancePSM2 = IsThumbNearCylinder(cylinderPSM2, worldPosPSM2, worldPosEndPSM2, Handedness.Left, out distanceToSurfacePSM2);
     }
+
+    // Utility to create cylinder if needed and assign material
+    private GameObject EnsureCylinder(GameObject cylinder, Material mat)
+    {
+        if (cylinder == null)
+        {
+            cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            if (mat != null)
+                cylinder.GetComponent<Renderer>().material = mat;
+            cylinder.GetComponent<Renderer>().enabled = false;
+            Destroy(cylinder.GetComponent<Collider>());
+        }
+        return cylinder;
+    }
+
+    // Utility to convert pixel UV to world position on quad
+    private Vector3 PixelToWorld(Vector2 uv, GameObject quad, Vector2 imageSizeMeters)
+    {
+        Vector3 localPoint = new Vector3(
+            (uv.x - 0.5f) * imageSizeMeters.x,
+            (0.5f - uv.y) * imageSizeMeters.y,
+            0f
+        );
+        return quad.transform.TransformPoint(localPoint);
+    }
+
+    // Utility to set cylinder transform
+    private void SetupCylinderTransform(GameObject cylinder, Vector3 start, Vector3 end)
+    {
+        Vector3 direction = start - end;
+        float distance = direction.magnitude;
+        Vector3 midpoint = end + direction / 2f;
+
+        cylinder.transform.position = midpoint;
+        cylinder.transform.up = direction.normalized;
+        cylinder.transform.localScale = new Vector3(0.05f, distance / 2f, 0.14f);
+    }
+
     private bool IsThumbNearCylinder(GameObject cylinder, Vector3 start, Vector3 end, Handedness hand, out float distanceToSurface)
     {
         distanceToSurface = 100f;

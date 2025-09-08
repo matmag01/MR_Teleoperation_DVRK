@@ -115,7 +115,7 @@ Shader "HandMeshShader"
                 if (_PressIntensity > pinchThreshold)
                 {
                     rimColor = _PinchOnlyColor.rgb;
-                    float intensity_col = 0.45;
+                    float intensity_col = 0.75;
                 }
                 else if (_PressIntensity > 0.28 && _PressIntensity < 0.45)
                 {

@@ -72,7 +72,8 @@ public class StartingScript : MonoBehaviour
         }
         else
         {
-            video.SetActive(false);
+            //video.SetAcstive(false);
+            quad.GetComponent<CustomPipelinePlayer>().enabled = false;
             intro.GetComponent<MeshRenderer>().enabled = true;
         }
     

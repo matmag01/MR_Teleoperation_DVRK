@@ -1,0 +1,120 @@
+[01:22:48] Info: Render API: 4
+[01:22:48] Info: Render API: 2
+[01:22:48] Info: Render API: 2
+[01:22:54] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[01:22:54] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[01:22:54] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[01:22:54] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[01:22:54] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[01:22:54] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[01:22:54] Info: HKEY_CLASSES_ROOT\VisualStudio.edmx.17.0.0.0.213e2051\shell\Shell\Open does not have a "command" subkey
+[01:22:54] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[01:22:55] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[01:22:55] Info: HKEY_CLASSES_ROOT\Access.MDBFile\shell\Shell\openAsReadOnly does not have a "command" subkey
+[01:22:56] Info: Unable to get UWP apps: IPackage_get_InstalledLocation() for package #63 (`Handtrackingbuiltinrenderpipeline_1.0.0.0_x64__pzq3xp76mxafg') failed with code 0x80070002
+[01:22:56] Info: Collecting capable appnames: 15ms
+Allocating hashtables:...... 0ms
+Reading capable apps:        375ms
+Reading URL associations:... 0ms
+Reading extension assocs:    235ms
+Reading exe-only apps:...... 62ms
+Reading classes:             1250ms
+Reading UWP apps:            750ms
+Postprocessing:..............0ms
+TOTAL:                       2687ms
+[01:25:05] mray_gstreamer_initialize
+[01:25:05] Info: Creating Pipeline: udpsrc port=7000 ! application/x-rtp ! rtph264depay ! avdec_h264 ! deinterlace ! videoflip method=vertical-flip ! videoconvert ! video/x-raw,format=RGB ! appsink name=videoSink emit-signals=true max-buffers=1 drop=true
+[01:25:05] Info: : GstPipelineHandler::CreatePipeline 
+[01:25:05] Info: : Pipeline State Changes:  GST_STATE_NULL--> GST_STATE_READY
+[01:25:05] Info: : Pipeline State Changes:  GST_STATE_READY--> GST_STATE_PAUSED
+[01:25:05] Warning: Can't seek to invalid time
+[01:25:05] Info: : Playing
+[01:25:08] Info: : Playing
+[01:25:08] Warning: : GstPipelineHandler::HandleMessage(): warning in module videoSink  reported: Pipeline construction is invalid, please add queues.
+[01:25:08] Info: : Pipeline State Changes:  GST_STATE_PAUSED--> GST_STATE_PLAYING
+[01:25:08] Warning: : GstPipelineHandler::HandleMessage(): warning in module videoSink  reported: Pipeline construction is invalid, please add queues.
+[01:25:15] Info: : Pausing
+[01:25:15] Info: : Pipeline State Changes:  GST_STATE_PLAYING--> GST_STATE_PAUSED
+[01:25:15] Info: : GstPipelineHandler::Stop 
+[01:25:15] Info: : Pipeline State Changes:  GST_STATE_PAUSED--> GST_STATE_READY
+[01:25:15] Info: : GstPipelineHandler::Close 
+[01:25:15] Info: : GstPipelineHandler::Stop 
+[01:25:15] Info: : Pipeline State Changes:  GST_STATE_READY--> GST_STATE_PAUSED
+[01:25:15] Warning: Can't seek to invalid time
+[01:25:15] Info: : GstPipelineHandler::Close 
+[01:25:15] Info: : GstPipelineHandler::Stop 
+[01:25:15] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:25:15] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:25:15] Error: gst_object_unref: assertion 'object != NULL' failed
+[01:25:15] Info: : GstPipelineHandler::Close 
+[01:25:15] Info: : GstPipelineHandler::Stop 
+[01:25:15] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:25:15] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:25:15] Error: gst_object_unref: assertion 'object != NULL' failed
+[01:25:15] Info: Checking is active
+[01:30:17] mray_gstreamer_initialize
+[01:30:17] Info: Creating Pipeline: udpsrc port=7000 ! application/x-rtp ! rtph264depay ! avdec_h264 ! deinterlace ! videoflip method=vertical-flip ! videoconvert ! video/x-raw,format=RGB ! appsink name=videoSink emit-signals=true max-buffers=1 drop=true
+[01:30:17] Info: : GstPipelineHandler::CreatePipeline 
+[01:30:17] Info: : Pipeline State Changes:  GST_STATE_NULL--> GST_STATE_READY
+[01:30:17] Info: : Pipeline State Changes:  GST_STATE_READY--> GST_STATE_PAUSED
+[01:30:17] Warning: Can't seek to invalid time
+[01:30:17] Info: : Playing
+[01:30:17] Info: : Playing
+[01:30:17] Warning: : GstPipelineHandler::HandleMessage(): warning in module videoSink  reported: Pipeline construction is invalid, please add queues.
+[01:30:17] Info: : Pipeline State Changes:  GST_STATE_PAUSED--> GST_STATE_PLAYING
+[01:30:17] Warning: : GstPipelineHandler::HandleMessage(): warning in module videoSink  reported: Pipeline construction is invalid, please add queues.
+[01:30:20] Info: : Pausing
+[01:30:20] Info: : Pipeline State Changes:  GST_STATE_PLAYING--> GST_STATE_PAUSED
+[01:30:20] Info: : GstPipelineHandler::Stop 
+[01:30:20] Info: : Pipeline State Changes:  GST_STATE_PAUSED--> GST_STATE_READY
+[01:30:20] Info: : GstPipelineHandler::Close 
+[01:30:20] Info: : GstPipelineHandler::Stop 
+[01:30:20] Info: : Pipeline State Changes:  GST_STATE_READY--> GST_STATE_PAUSED
+[01:30:20] Warning: Can't seek to invalid time
+[01:30:20] Info: : GstPipelineHandler::Close 
+[01:30:20] Info: : GstPipelineHandler::Stop 
+[01:30:20] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:20] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:20] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:20] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:20] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:20] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:20] Error: gst_object_unref: assertion 'object != NULL' failed
+[01:30:20] Info: : GstPipelineHandler::Close 
+[01:30:20] Info: : GstPipelineHandler::Stop 
+[01:30:20] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:20] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:20] Error: gst_object_unref: assertion 'object != NULL' failed
+[01:30:20] Info: Checking is active
+[01:30:37] mray_gstreamer_initialize
+[01:30:37] Info: Creating Pipeline: udpsrc port=7000 ! application/x-rtp ! rtph264depay ! avdec_h264 ! deinterlace ! videoflip method=vertical-flip ! videoconvert ! video/x-raw,format=RGB ! appsink name=videoSink emit-signals=true max-buffers=1 drop=true
+[01:30:37] Info: : GstPipelineHandler::CreatePipeline 
+[01:30:37] Info: : Pipeline State Changes:  GST_STATE_NULL--> GST_STATE_READY
+[01:30:37] Info: : Pipeline State Changes:  GST_STATE_READY--> GST_STATE_PAUSED
+[01:30:37] Warning: Can't seek to invalid time
+[01:30:37] Info: : Playing
+[01:30:37] Warning: : GstPipelineHandler::HandleMessage(): warning in module videoSink  reported: Pipeline construction is invalid, please add queues.
+[01:30:37] Info: : Pipeline State Changes:  GST_STATE_PAUSED--> GST_STATE_PLAYING
+[01:30:37] Info: : Pausing
+[01:30:37] Info: : Pipeline State Changes:  GST_STATE_PLAYING--> GST_STATE_PAUSED
+[01:30:46] Info: : GstPipelineHandler::Stop 
+[01:30:46] Info: : Pipeline State Changes:  GST_STATE_PAUSED--> GST_STATE_READY
+[01:30:46] Info: : GstPipelineHandler::Close 
+[01:30:46] Info: : GstPipelineHandler::Stop 
+[01:30:46] Info: : Pipeline State Changes:  GST_STATE_READY--> GST_STATE_PAUSED
+[01:30:46] Warning: Can't seek to invalid time
+[01:30:46] Info: : GstPipelineHandler::Close 
+[01:30:46] Info: : GstPipelineHandler::Stop 
+[01:30:46] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:46] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:46] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:46] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:46] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:46] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:46] Error: gst_object_unref: assertion 'object != NULL' failed
+[01:30:46] Info: : GstPipelineHandler::Close 
+[01:30:46] Info: : GstPipelineHandler::Stop 
+[01:30:46] Error: gst_element_set_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:46] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
+[01:30:46] Error: gst_object_unref: assertion 'object != NULL' failed
+[01:30:47] Info: Checking is active

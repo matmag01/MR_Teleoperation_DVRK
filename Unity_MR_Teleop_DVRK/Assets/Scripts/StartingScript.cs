@@ -44,6 +44,8 @@ public class StartingScript : MonoBehaviour
     public GameObject txtQuadFixed;
     public GameObject txtCameraFixed;
     public bool showVideo = false;
+    public GameObject allowRotation;
+    public GameObject allowTranslation;
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +61,8 @@ public class StartingScript : MonoBehaviour
         OFFPSM2.GetComponent<MeshRenderer>().enabled = true;
         ONPSM1.GetComponent<MeshRenderer>().enabled = false;
         OFFPSM1.GetComponent<MeshRenderer>().enabled = true;
+        allowRotation.GetComponent<Renderer>().enabled = false;
+        allowTranslation.GetComponent<Renderer>().enabled = false;
         //homeButton.SetActive(false);
         //calibButton.SetActive(false);
         if (showVideo)
@@ -69,7 +73,7 @@ public class StartingScript : MonoBehaviour
         else
         {
             video.SetActive(false);
-            intro.GetComponent<MeshRenderer>().enabled = true;            
+            intro.GetComponent<MeshRenderer>().enabled = true;
         }
     
         isCenetered = true;

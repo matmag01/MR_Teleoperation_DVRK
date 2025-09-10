@@ -64,8 +64,11 @@ public class MovecameraLikeConsole : MonoBehaviour
     //public GameObject homeButton;
     MotionFilter motionFilter;
     public GameObject audioFeedback;
+    public GameObject allowRotation;
+    public GameObject allowTranslation;
     bool isFirstTime;
-    
+    bool startCameraTeleop = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,24 +79,6 @@ public class MovecameraLikeConsole : MonoBehaviour
         insertion.GetComponent<MeshRenderer>().enabled = false;
         rotation.GetComponent<MeshRenderer>().enabled = false;
         moveECM.GetComponent<MeshRenderer>().enabled = false;
-        isFirstTime = true;
-        if (isFirstTime)
-        {
-            isFirstTime = false;
-            Vector<float> joints = UDPComm.ECM_Joints;
-            float yaw = joints[0];
-            float pitch = joints[1];
-            float insertionjoint = joints[2];
-            float roll = 0f;
-            jointsMessage = "{\"move_jp\":{\"Goal\":[" +
-                yaw.ToString(CultureInfo.InvariantCulture) + "," +
-                pitch.ToString(CultureInfo.InvariantCulture) + "," +
-                insertionjoint.ToString(CultureInfo.InvariantCulture) + "," +
-                roll.ToString(CultureInfo.InvariantCulture) +
-                "]}}";
-            Debug.Log("Message sent: " + jointsMessage);
-            UDP.GetComponent<UDPComm>().UDPsendECM(jointsMessage);    
-        }
     }
 
     // Update is called once per frame
@@ -204,11 +189,6 @@ public class MovecameraLikeConsole : MonoBehaviour
         else if (Mathf.Abs(rot) > 10f * Mathf.Deg2Rad && projected_Vector.magnitude < radius && CanRotateCamera)
         {
             Debug.Log("rot: " + rot * Mathf.Rad2Deg);
-            /*
-            CWArrow.gameObject.SetActive(((Mathf.Sign(rot) < 0) ? true : false));
-            CCWArrow.gameObject.SetActive(((Mathf.Sign(rot) > 0) ? true : false));
-            cameraAngle.gameObject.SetActive(true);
-            */
             isActive = true;
             HideText(ECM_status);
             ShowText(rotation);
@@ -349,7 +329,14 @@ public class MovecameraLikeConsole : MonoBehaviour
         ShowText(ECM_status);
         canMove = true;
         toReset = false;
-        audioFeedback.GetComponent<AudioFeedback>().StartAudio();
+        if (!startCameraTeleop)
+        {
+            startCameraTeleop = true;
+            audioFeedback.GetComponent<AudioFeedback>().StartAudio();
+            allowRotation.GetComponent<Renderer>().enabled = true;
+            allowTranslation.GetComponent<Renderer>().enabled = false;
+            CanRotateCamera = false;
+        }
         SetCameraStartRotation();
         lastQuadPosition = quad.transform.localPosition;
         lastQuadPosition1 = quad.transform.localPosition;
@@ -357,7 +344,7 @@ public class MovecameraLikeConsole : MonoBehaviour
         isOpen = true;
         //homeButton.SetActive(true);
         motionFilter = new MotionFilter();
-        motionFilter.smoothingFactor = 0.33f;
+        motionFilter.smoothingFactor = 0.56f;
         quad.transform.Find("QuadBgLeft").GetComponent<MeshRenderer>().material.color = Color.cyan;
         quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.cyan;  
         BoxCollider[] colliders = quad.GetComponents<BoxCollider>();
@@ -414,6 +401,11 @@ public class MovecameraLikeConsole : MonoBehaviour
         {
             col.enabled = false;
         }
+        allowRotation.GetComponent<Renderer>().enabled = false;
+        allowTranslation.GetComponent<Renderer>().enabled = false;
+        startCameraTeleop = false;
+        CanRotateCamera = false;
+        quad.gameObject.GetComponent<FolloCamera>().enabled = false;
         //directionArrow.gameObject.SetActive(false);
         //audioFeedback.GetComponent<AudioFeedback>().StopAudio();
     }
@@ -489,10 +481,16 @@ public class MovecameraLikeConsole : MonoBehaviour
     public void CanRotate()
     {
         CanRotateCamera = true;
+        allowRotation.GetComponent<Renderer>().enabled = false;
+        allowTranslation.GetComponent<Renderer>().enabled = true;
+        StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().CameraModality("rotate"));
     }
     public void CannotRotate()
     {
         CanRotateCamera = false;
+        allowRotation.GetComponent<Renderer>().enabled = true;
+        allowTranslation.GetComponent<Renderer>().enabled = false;
+        StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().CameraModality("translate"));
     }
     // convert quaternion to rotation matrix
     public static Matrix<float> Quat2Rot(Quaternion q)

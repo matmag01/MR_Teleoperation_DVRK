@@ -18,6 +18,8 @@ public class AudioFeedback : MonoBehaviour
     public AudioClip calib;
     public AudioClip intro;
     public AudioClip badHandTracking;
+    public AudioClip cameraRotation;
+    public AudioClip cameraTranslation;
     [HideInInspector]
     public bool isWarnning;
     [HideInInspector]
@@ -51,10 +53,27 @@ public class AudioFeedback : MonoBehaviour
     IEnumerator TeleoperationStarted()
     {
         audioSources[0].clip = cameraTeleopClip; // Set the voice recording clip to play
-        audioSources[2].volume = 0.55f;
+        audioSources[0].volume = 0.35f;
         audioSources[0].Play(); // Start playing the voice recording
         float duration = audioSources[0].clip.length;
         yield return new WaitForSeconds(duration);
+    }
+
+    public IEnumerator CameraModality(string act)
+    {
+        audioSources[0].Stop();
+        if (act == "rotate")
+        {
+            audioSources[0].clip = cameraRotation;
+        }
+        else if (act == "translate")
+        {
+            audioSources[0].clip = cameraTranslation;
+        }
+        audioSources[0].volume = 0.35f;
+        audioSources[0].Play(); // Start playing the voice recording
+        float duration = audioSources[0].clip.length;
+        yield return new WaitForSeconds(duration * 1.1f);
     }
 
     public IEnumerator LeftRightTooFar(string act)

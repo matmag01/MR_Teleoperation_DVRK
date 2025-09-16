@@ -170,7 +170,7 @@ MonoBehaviour:
   quad: {fileID: 746945108}
   headTrack: {fileID: 189900451}
   axis: {fileID: 8755686004610376737, guid: e97cabd5816aa7043821b6b78661feb6, type: 3}
-  scale: 0.13
+  scale: 0.19
   UDP: {fileID: 671443128}
   sphere_marker: {fileID: 8631210952515766784, guid: 09d5b89fd40805249a6a54162e7959d4, type: 3}
   hololens: {fileID: 963194225}
@@ -185,7 +185,7 @@ MonoBehaviour:
   badHandTracking: {fileID: 715794253}
   txtQuadFixed: {fileID: 831608077}
   txtCameraFixed: {fileID: 336906984}
-  showVideo: 1
+  showVideo: 0
   allowRotation: {fileID: 1628693140}
   allowTranslation: {fileID: 1625548643}
 --- !u!114 &43717180
@@ -648,7 +648,7 @@ MonoBehaviour:
   moveECM: {fileID: 716193420}
   txtQuadFixed: {fileID: 831608077}
   txtCameraFixed: {fileID: 336906984}
-  inactivityThreshold: 6
+  inactivityThreshold: 4
   audioFeedback: {fileID: 699940413}
   allowRotation: {fileID: 1628693140}
   allowTranslation: {fileID: 1625548643}
@@ -2053,7 +2053,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.059999995, y: -0.547, z: 2.5}
-  m_LocalScale: {x: 0.3, y: 0.23630771, z: 0.1769231}
+  m_LocalScale: {x: 0.29, y: 0.22843078, z: 0.17102565}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2031936301}
@@ -2371,15 +2371,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sphere_marker: {fileID: 8631210952515766784, guid: 09d5b89fd40805249a6a54162e7959d4, type: 3}
   axis: {fileID: 8755686004610376737, guid: e97cabd5816aa7043821b6b78661feb6, type: 3}
-  thresholdClutch: 0.005
+  thresholdClutch: 0.006
   UDP: {fileID: 671443128}
   quad: {fileID: 746945108}
   hololens: {fileID: 963194225}
   teleop_on: {fileID: 630330433}
   teleop_off: {fileID: 1255125003}
-  scale: 0.08
+  scale: 0.1
   teleop: 0
-  rotationScale: 0.44
+  rotationScale: 0.67
   audioFeedback: {fileID: 699940413}
 --- !u!114 &819763952
 MonoBehaviour:
@@ -3202,10 +3202,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   quad: {fileID: 746945108}
   cylinderMaterial: {fileID: 2100000, guid: 8ee8de90c691d9643ae15f0ec0cb2f88, type: 2}
-  instrumentLength: 0.35
-  instrumentRadius: 0.02
+  cylinderMaterialLeft: {fileID: 2100000, guid: 4f9b13b4922987b4b9b3ab9a84ed400f, type: 2}
+  instrumentLength: 0.17
+  instrumentRadius: 0.007
   smoothingFactor: 0.61
-  maxDistance: 0.07
+  maxDistance: 0.06
+  distanceToSurface: -0.069
 --- !u!1 &1255125003
 GameObject:
   m_ObjectHideFlags: 0
@@ -4036,7 +4038,7 @@ Transform:
   m_GameObject: {fileID: 1625548643}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.28, y: -0.28, z: -0.37499967}
+  m_LocalPosition: {x: -0.28, y: -0.3370001, z: -0.37499967}
   m_LocalScale: {x: 0.0026046508, y: 0.0046086954, z: 0.0050000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4069,7 +4071,7 @@ Transform:
   m_GameObject: {fileID: 1628693140}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.19900003, y: -0.28, z: -0.37499967}
+  m_LocalPosition: {x: -0.232, y: -0.337, z: -0.37499967}
   m_LocalScale: {x: 0.0026046508, y: 0.0046086954, z: 0.0050000004}
   m_ConstrainProportionsScale: 0
   m_Children: []

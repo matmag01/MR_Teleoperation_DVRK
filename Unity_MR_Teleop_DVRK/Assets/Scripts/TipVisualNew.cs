@@ -93,7 +93,7 @@ public class TipVisualNew : MonoBehaviour
             { 0f, 1755.62582f, 509.52462f, 0f },
             { 0f, 0f, 1f, 0f }
         };
-        */
+        
         var matrixDataGstreamLeft = new float[,]
         {
             { 1905.46146f, 0f, 668.38528f, 0f },
@@ -104,6 +104,19 @@ public class TipVisualNew : MonoBehaviour
         {
             {1905.46146f, 0f, 668.38528f, 10.55401f },
             { 0f, 1905.46146f, 498.80738f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+        */
+        var matrixDataGstreamLeft = new float[,]
+        {
+            { 1862.78912f, 0f, 697.99173f, 0f },
+            { 0f, 1862.78912f, 490.40184f, 0f },
+            { 0f, 0f, 1f, 0f }
+        };
+        var matrixDataGstreamRight = new float[,]
+        {
+            { 1862.78912f, 0f, 697.99173f, -10.03737f },
+            { 0f, 1862.78912f, 490.40184f, 0f },
             { 0f, 0f, 1f, 0f }
         };
         calib = Matrix<float>.Build.DenseOfArray(matrixDataGstreamLeft);

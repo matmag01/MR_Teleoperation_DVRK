@@ -406,6 +406,8 @@ public class MovecameraLikeConsole : MonoBehaviour
         startCameraTeleop = false;
         CanRotateCamera = false;
         quad.gameObject.GetComponent<FolloCamera>().enabled = false;
+        StartingScript.isCenetered = true;
+
         //directionArrow.gameObject.SetActive(false);
         //audioFeedback.GetComponent<AudioFeedback>().StopAudio();
     }

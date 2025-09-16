@@ -33,7 +33,7 @@ public class StartingScript : MonoBehaviour
     public GameObject intro;
     public GameObject video;
     float count;
-    bool isCenetered;
+    public static bool isCenetered;
     public GameObject audioFeedback;
     static public bool firstTimePSM1 = true;
     static public bool firstTimePSM2 = true;

@@ -15,6 +15,7 @@ public class InstrumentDrawing : MonoBehaviour
     public GameObject quad;
     private GameObject cylinderPSM2;
     private GameObject cylinderPSM1;
+    private GameObject cylinderPSM2Left;
     private int width = 1300;
     private int height = 1024;
     private Vector2 imageSizePx;
@@ -31,18 +32,21 @@ public class InstrumentDrawing : MonoBehaviour
     Vector3 tipOnQuadPlanePSM2;
     Vector3 worldPosPSM2;
     Vector3 worldPosEndPSM2;
+    Vector3 worldPosPSM2Left;
+    Vector3 worldPosEndPSM2Left;
+
     public static bool smallDistancePSM2 = false;
     float distanceToSurfacePSM2;
     public Material cylinderMaterial;
+    public Material cylinderMaterialLeft;
     quaternion quatPSM1;
     quaternion quatPSM2;
     public float instrumentLength = 0.2f; //20 cm
     public float instrumentRadius = 0.01f; //1 cm
-    MotionFilter cylinderPSM1MotionFilter;
-    MotionFilter cylinderPSM2MotionFilter;
     public float smoothingFactor = 0.61f;
     bool PSM1 = true;
     public float maxDistance = 0.07f; // 7 cm
+    public float distanceToSurface = -0.005f;
 
     void Start()
     {
@@ -67,18 +71,27 @@ public class InstrumentDrawing : MonoBehaviour
         Vector3 localPointPSM1 = new Vector3(
             (uvPSM1.x - 0.5f) * imageSizeMeters.x,
             (0.5f - uvPSM1.y) * imageSizeMeters.y,
-            0f
+            distanceToSurface
         );
         //tipOnQuadPlanePSM1 = quad.transform.TransformPoint(localPointPSM1);
-        worldPosPSM1 = quad.transform.position + quad.transform.right * localPointPSM1.x + quad.transform.up * localPointPSM1.y + quad.transform.forward * 0;
+        worldPosPSM1 = quad.transform.position + quad.transform.right * localPointPSM1.x + quad.transform.up * localPointPSM1.y + quad.transform.forward * localPointPSM1.z;
 
         Vector3 localPointPSM2 = new Vector3(
             (uvPSM2.x - 0.5f) * imageSizeMeters.x,
             (0.5f - uvPSM2.y) * imageSizeMeters.y,
-            0f
+            distanceToSurface
+        );
+
+        Vector3 localPointPSM2Left = new Vector3(
+            (uvPSM2.x - 0.5f) * imageSizeMeters.x,
+            (0.5f - uvPSM2.y) * imageSizeMeters.y,
+            distanceToSurface
         );
         tipOnQuadPlanePSM2 = quad.transform.TransformPoint(localPointPSM2);
-        worldPosPSM2 = quad.transform.position + quad.transform.right * localPointPSM2.x + quad.transform.up * localPointPSM2.y + quad.transform.forward * 0;
+        worldPosPSM2 = quad.transform.position + quad.transform.right * localPointPSM2.x + quad.transform.up * localPointPSM2.y + quad.transform.forward * localPointPSM2.z;
+
+        //tipOnQuadPlanePSM2 = quad.transform.TransformPoint(localPointPSM2Left);
+        //worldPosPSM2Left = quad.transform.position + quad.transform.right * localPointPSM2.x + quad.transform.up * localPointPSM2.y + quad.transform.forward * 0;
 
         // Compute direction in ECM RF (forward vector rotated by quaternion)
         Vector3 dirPSM1_ECM = math.mul(quatPSM1, Vector3.forward);
@@ -109,17 +122,16 @@ public class InstrumentDrawing : MonoBehaviour
         // Compute end positions for cylinders
         worldPosEndPSM1 = worldPosPSM1 + dirPSM1_Quad * instrumentLength;
         worldPosEndPSM2 = worldPosPSM2 + dirPSM2_Quad * instrumentLength;
-
+        //worldPosEndPSM2Left = worldPosPSM2Left + dirPSM2_Quad * instrumentLength;
 
         // If calibration not completed or camera open, destroy cylinders and reset filters --> Cylinders re-created only when teleop is on
-        /*
         if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
         {
             Destroy(cylinderPSM1);
             Destroy(cylinderPSM2);
+            //Destroy(cylinderPSM2Left);
             return;
         }
-        */
 
         // Create cylinders if needed
         if (cylinderPSM1 == null)
@@ -134,11 +146,18 @@ public class InstrumentDrawing : MonoBehaviour
             cylinderPSM2.GetComponent<Renderer>().material = cylinderMaterial;
             Destroy(cylinderPSM2.GetComponent<Collider>());
         }
-
+        /*
+        if (cylinderPSM2Left == null)
+        {
+            cylinderPSM2Left = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cylinderPSM2Left.GetComponent<Renderer>().material = cylinderMaterialLeft;
+            Destroy(cylinderPSM2.GetComponent<Collider>());
+        }
+        */
         // Set cylinder transforms
         SetCylinderTransform(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, instrumentLength, instrumentRadius, PSM1 = true);
         SetCylinderTransform(cylinderPSM2, worldPosPSM2, worldPosEndPSM2, instrumentLength, instrumentRadius, PSM1 = false);
-
+        //SetCylinderTransform(cylinderPSM2Left, worldPosPSM2Left, worldPosEndPSM2Left, distanceToSurface, instrumentRadius, PSM1 = false);
         // Distance from hand to cylinder:
         //smallDistancePSM1 = IsThumbNearCylinder(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, Handedness.Right, out distanceToSurfacePSM1);
         //smallDistancePSM2 = IsThumbNearCylinder(cylinderPSM2, worldPosPSM2, worldPosEndPSM2, Handedness.Left, out distanceToSurfacePSM2);

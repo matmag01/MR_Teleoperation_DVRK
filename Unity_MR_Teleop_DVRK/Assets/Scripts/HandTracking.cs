@@ -22,7 +22,7 @@ public class HandTracking : MonoBehaviour
     // Object to identify hands and GameObject 
     public GameObject sphere_marker;
     public GameObject axis;
-    public float thresholdClutch = 0.003f;
+    public float thresholdClutch = 0.005f;
     private GameObject thumbMarker;
     private GameObject handAxis;
     public GameObject UDP;
@@ -90,7 +90,7 @@ public class HandTracking : MonoBehaviour
     // Filter
     MotionFilter PSM1MotionFilter;
     MotionFilter PSM2MotionFilter;
-    public float rotationScale = 0.45f;
+    public float rotationScale = 0.67f;
     private QuaternionEMAFilter PSM1RotFilter;
     private QuaternionEMAFilter PSM2RotFilter;
 
@@ -141,9 +141,6 @@ public class HandTracking : MonoBehaviour
         {
             palmPos = pose.Position;
             palmRot = pose.Rotation;
-            handAxis.SetActive(true);
-            handAxis.transform.position = pose.Position;
-            handAxis.transform.rotation = pose.Rotation;
         }
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.Wrist, hand, out pose))
         {
@@ -159,6 +156,9 @@ public class HandTracking : MonoBehaviour
             //thumb_prox.transform.position = pose.Position;
 
             // rotation axis
+            handAxis.SetActive(true);
+            handAxis.transform.position = pose.Position;
+            handAxis.transform.rotation = pose.Rotation;
         }        
 
         // Pinch distance computation --> clutch state check
@@ -393,7 +393,7 @@ public class HandTracking : MonoBehaviour
 
 
         // --- ROTATION SCALING --- //
-
+        /*
         // Extract angle and axis
         axis_rot.ToAngleAxis(out float angle, out Vector3 axis);
         axis.Normalize();
@@ -409,20 +409,21 @@ public class HandTracking : MonoBehaviour
         Debug.Log("Angle: " + angle + " Axis: " + axis + " Scaled Angle: " + scaledAngle + " New EE rot: " + new_EE_rot);
 
         // FINE MODIFICA
+        */
 
 
 
+        new_EE_rot = axis_rot * startEERot; // Attention: x axis is shifted (I think)
 
-        //new_EE_rot = axis_rot * startEERot; // Attention: x axis is shifted (I think)
-        
-        
+
         // Apply EMA filter to rotation
+        /*
         if (PSM_flag == PSM1)
             new_EE_rot = PSM1RotFilter.UpdateEMA(new_EE_rot);
         else if (PSM_flag == PSM2)
             new_EE_rot = PSM2RotFilter.UpdateEMA(new_EE_rot);
         
-
+        */
         //Debug.Log("MOVE : PSM flag: " + PSM_flag + " EE rot: " + EE_quat + "EE start rot: " + startEERot + "new EE pose: " + new_EE_rot + "jaw angle: " + jaw_angle);
 
         EE_rot_send = Quat2Rot(Quaternion.Normalize(new_EE_rot)); // convert normalised quaternion to rotation matrix

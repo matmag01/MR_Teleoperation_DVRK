@@ -22,7 +22,7 @@ public class HandTracking : MonoBehaviour
     // Object to identify hands and GameObject 
     public GameObject sphere_marker;
     public GameObject axis;
-    public float thresholdClutch = 0.005f;
+    public float thresholdClutch = 0.011f;
     private GameObject thumbMarker;
     private GameObject handAxis;
     public GameObject UDP;
@@ -103,9 +103,9 @@ public class HandTracking : MonoBehaviour
         handAxis = Instantiate(axis, this.transform);
         handAxis.transform.localScale = new Vector3(0.015f, 0.015f, 0.025f);
         PSM1MotionFilter = new MotionFilter();
-        PSM1MotionFilter.smoothingFactor = 0.8f;
+        PSM1MotionFilter.smoothingFactor = 0.9f;
         PSM2MotionFilter = new MotionFilter();
-        PSM2MotionFilter.smoothingFactor = 0.8f;
+        PSM2MotionFilter.smoothingFactor = 0.9f;
         PSM1RotFilter = new QuaternionEMAFilter(0.2f);
         PSM2RotFilter = new QuaternionEMAFilter(0.2f);
         firstTime = true;
@@ -244,7 +244,7 @@ public class HandTracking : MonoBehaviour
                 // Move or clutch only if camera is fixed
                 if (!MovecameraLikeConsole.isOpen)
                 {
-                    if (pinch_dist < clutch_distance + thresholdClutch)
+                    if (pinch_dist <= clutch_distance + thresholdClutch)
                     {
                         // Clutch state
                         if (PSM_flag == PSM1)

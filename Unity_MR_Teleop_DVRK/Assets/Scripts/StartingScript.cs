@@ -32,7 +32,7 @@ public class StartingScript : MonoBehaviour
     public GameObject calib_txt;
     public GameObject intro;
     public GameObject video;
-    float count;
+    public static float count;
     public static bool isCenetered;
     public GameObject audioFeedback;
     static public bool firstTimePSM1 = true;
@@ -169,6 +169,19 @@ public class StartingScript : MonoBehaviour
         {
             PSM1.teleop = false;
             PSM2.teleop = false;
+            ONPSM2.GetComponent<MeshRenderer>().enabled = false;
+            OFFPSM2.GetComponent<MeshRenderer>().enabled = true;
+            ONPSM1.GetComponent<MeshRenderer>().enabled = false;
+            OFFPSM1.GetComponent<MeshRenderer>().enabled = true;
+            first_timer_PSM2_on = 0;
+            first_timer_PSM1_on = 0;
+        }
+        if(HandTracking.isReset)
+        {
+            StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().PSMTeleop("exit"));
+            PSM1.teleop = false;
+            PSM2.teleop = false;
+            HandTracking.isReset = false;
             ONPSM2.GetComponent<MeshRenderer>().enabled = false;
             OFFPSM2.GetComponent<MeshRenderer>().enabled = true;
             ONPSM1.GetComponent<MeshRenderer>().enabled = false;

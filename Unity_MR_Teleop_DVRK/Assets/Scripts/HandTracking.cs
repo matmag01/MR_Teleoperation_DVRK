@@ -73,6 +73,8 @@ public class HandTracking : MonoBehaviour
     string pose_message;
     string jaw_message;
     float jawAngleSend;
+    string jointsMessage;
+
 
     // Flags
     public bool teleop;
@@ -84,6 +86,9 @@ public class HandTracking : MonoBehaviour
     bool firstTimeOutOfView = true;
     static public bool arduinoPSM1 = false;
     static public bool arduinoPSM2 = false;
+    static public bool isReset = false;
+    bool clockWise = false;
+    bool counterClockWise = false;
 
     // Time
     float T = 0f;
@@ -159,7 +164,7 @@ public class HandTracking : MonoBehaviour
             handAxis.SetActive(true);
             handAxis.transform.position = pose.Position;
             handAxis.transform.rotation = pose.Rotation;
-        }        
+        }
 
         // Pinch distance computation --> clutch state check
         pinch_dist = Vector3.Magnitude(thumbPos - indexPos);
@@ -182,7 +187,7 @@ public class HandTracking : MonoBehaviour
         {
             firstTimeOutOfView = true;
             clutch_distance = CalibrationScript.calibrated_pinch;
-            if (thumbMarker.GetComponent<Renderer>().enabled && !MovecameraLikeConsole.isOpen)
+            if (thumbMarker.GetComponent<Renderer>().enabled && !MovecameraLikeConsole.isOpen && !isReset)
             {
                 if (PSM_flag == PSM1)
                 {
@@ -242,7 +247,7 @@ public class HandTracking : MonoBehaviour
                     handWasNotTracked = false;
                 }
                 // Move or clutch only if camera is fixed
-                if (!MovecameraLikeConsole.isOpen)
+                if (!MovecameraLikeConsole.isOpen && !isReset)
                 {
                     if (pinch_dist <= clutch_distance + thresholdClutch)
                     {
@@ -257,7 +262,7 @@ public class HandTracking : MonoBehaviour
                         }
                         checkPose = true;
                         ClutchPSM();
-                        
+
                     }
                     if (pinch_dist > clutch_distance + thresholdClutch)
                     {
@@ -330,7 +335,7 @@ public class HandTracking : MonoBehaviour
     {
         if (PSM_flag == PSM1)
         {
-            quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.green ;
+            quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.green;
 
         }
         else if (PSM_flag == PSM2)
@@ -463,7 +468,7 @@ public class HandTracking : MonoBehaviour
         }
         return toSend;
     }
-    
+
     // This function sets PSM1 to right hand and PSM2 to left hand
     public void SetPSM(String PSM)
     {
@@ -619,6 +624,193 @@ public class HandTracking : MonoBehaviour
         public void ResetEMAValue()
         {
             initialized = false;
+        }
+    }
+    // Send robot wrist to home position
+    public void ReturnHomePosition()
+    {
+        quad.transform.Find("QuadBgLeft").GetComponent<MeshRenderer>().material.color = Color.gray;
+        quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.gray;
+        isReset = true;
+        StartingScript.firstTimePSM1 = true;
+        StartingScript.firstTimePSM2 = true;
+
+        Debug.Log("Return to home position");
+
+        Debug.Log("Return to home position PSM1");
+        // joint values from UDP
+        Vector<float> joints = UDPComm.PSM1_Joints;
+        float yaw = joints[0];
+        float pitch = joints[1];
+        float insertion = joints[2];
+        float roll = joints[3];
+        float wrist_pitch = joints[4];
+        float wrist_yaw = joints[5];
+        float jaw_angle1 = UDPComm.jaw_angle_PSM1;
+
+        // desired joint values
+        roll = 0f;
+        wrist_pitch = 0f;
+        wrist_yaw = 0f;
+
+        // send message
+        jointsMessage = "{\"move_jp\":{\"Goal\":[" +
+            yaw.ToString(CultureInfo.InvariantCulture) + "," +
+            pitch.ToString(CultureInfo.InvariantCulture) + "," +
+            insertion.ToString(CultureInfo.InvariantCulture) + "," +
+            roll.ToString(CultureInfo.InvariantCulture) + "," +
+            wrist_pitch.ToString(CultureInfo.InvariantCulture) + "," +
+            wrist_yaw.ToString(CultureInfo.InvariantCulture) +
+            "]}}";
+        jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jaw_angle1.ToString("R", CultureInfo.InvariantCulture) + "]}}";
+        UDP.GetComponent<UDPComm>().UDPsend(jointsMessage, jaw_message, "PSM1");
+
+        Debug.Log("Return to home position PSM2");
+
+        // joint values from UDP
+        joints = UDPComm.PSM2_Joints;
+        yaw = joints[0];
+        pitch = joints[1];
+        insertion = joints[2];
+        roll = joints[3];
+        wrist_pitch = joints[4];
+        wrist_yaw = joints[5];
+        float jaw_angle2 = UDPComm.jaw_angle_PSM2;
+
+        // desired joint values
+        roll = 0f;
+        wrist_pitch = 0f;
+        wrist_yaw = 0f;
+
+        // send message
+        jointsMessage = "{\"move_jp\":{\"Goal\":[" +
+            yaw.ToString(CultureInfo.InvariantCulture) + "," +
+            pitch.ToString(CultureInfo.InvariantCulture) + "," +
+            insertion.ToString(CultureInfo.InvariantCulture) + "," +
+            roll.ToString(CultureInfo.InvariantCulture) + "," +
+            wrist_pitch.ToString(CultureInfo.InvariantCulture) + "," +
+            wrist_yaw.ToString(CultureInfo.InvariantCulture) +
+            "]}}";
+        jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jaw_angle2.ToString("R", CultureInfo.InvariantCulture) + "]}}";
+        UDP.GetComponent<UDPComm>().UDPsend(jointsMessage, jaw_message, "PSM2");
+    }
+    public void ClockWiseRotationPSM1()
+    {
+        Vector<float> joints = UDPComm.PSM1_Joints;
+        float yaw = joints[0];
+        float pitch = joints[1];
+        float insertion = joints[2];
+        float roll = joints[3];
+        float wrist_pitch = joints[4];
+        float wrist_yaw = joints[5];
+        float jaw_angle1 = UDPComm.jaw_angle_PSM1;
+
+        // desired joint values
+        if (roll <= 3)
+        {
+            roll += 0.55f;
+            ClutchPSM();
+            // send message
+            jointsMessage = "{\"move_jp\":{\"Goal\":[" +
+                yaw.ToString(CultureInfo.InvariantCulture) + "," +
+                pitch.ToString(CultureInfo.InvariantCulture) + "," +
+                insertion.ToString(CultureInfo.InvariantCulture) + "," +
+                roll.ToString(CultureInfo.InvariantCulture) + "," +
+                wrist_pitch.ToString(CultureInfo.InvariantCulture) + "," +
+                wrist_yaw.ToString(CultureInfo.InvariantCulture) +
+                "]}}";
+            jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jaw_angle1.ToString("R", CultureInfo.InvariantCulture) + "]}}";
+            UDP.GetComponent<UDPComm>().UDPsend(jointsMessage, jaw_message, "PSM1");
+            ClutchPSM();
+        }
+    }
+    public void ClockWiseRotationPSM2()
+    {
+        Vector<float> joints = UDPComm.PSM2_Joints;
+        float yaw = joints[0];
+        float pitch = joints[1];
+        float insertion = joints[2];
+        float roll = joints[3];
+        float wrist_pitch = joints[4];
+        float wrist_yaw = joints[5];
+        float jaw_angle1 = UDPComm.jaw_angle_PSM1;
+
+        if (roll <= 3)
+        {
+            roll += 0.55f;
+            ClutchPSM();
+            // send message
+            jointsMessage = "{\"move_jp\":{\"Goal\":[" +
+                yaw.ToString(CultureInfo.InvariantCulture) + "," +
+                pitch.ToString(CultureInfo.InvariantCulture) + "," +
+                insertion.ToString(CultureInfo.InvariantCulture) + "," +
+                roll.ToString(CultureInfo.InvariantCulture) + "," +
+                wrist_pitch.ToString(CultureInfo.InvariantCulture) + "," +
+                wrist_yaw.ToString(CultureInfo.InvariantCulture) +
+                "]}}";
+            jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jaw_angle1.ToString("R", CultureInfo.InvariantCulture) + "]}}";
+            UDP.GetComponent<UDPComm>().UDPsend(jointsMessage, jaw_message, "PSM2");
+            ClutchPSM();
+        }
+    }
+    public void CounterClockWiseRotationPSM1()
+    {
+        Vector<float> joints = UDPComm.PSM1_Joints;
+        float yaw = joints[0];
+        float pitch = joints[1];
+        float insertion = joints[2];
+        float roll = joints[3];
+        float wrist_pitch = joints[4];
+        float wrist_yaw = joints[5];
+        float jaw_angle1 = UDPComm.jaw_angle_PSM1;
+
+        // desired joint values
+        if (roll >= -3)
+        {
+            roll -= 0.55f;
+            ClutchPSM();
+            // send message
+            jointsMessage = "{\"move_jp\":{\"Goal\":[" +
+                yaw.ToString(CultureInfo.InvariantCulture) + "," +
+                pitch.ToString(CultureInfo.InvariantCulture) + "," +
+                insertion.ToString(CultureInfo.InvariantCulture) + "," +
+                roll.ToString(CultureInfo.InvariantCulture) + "," +
+                wrist_pitch.ToString(CultureInfo.InvariantCulture) + "," +
+                wrist_yaw.ToString(CultureInfo.InvariantCulture) +
+                "]}}";
+            jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jaw_angle1.ToString("R", CultureInfo.InvariantCulture) + "]}}";
+            UDP.GetComponent<UDPComm>().UDPsend(jointsMessage, jaw_message, "PSM1");
+            ClutchPSM();
+        }
+    }
+    public void CounterClockWiseRotationPSM2()
+    {
+        Vector<float> joints = UDPComm.PSM2_Joints;
+        float yaw = joints[0];
+        float pitch = joints[1];
+        float insertion = joints[2];
+        float roll = joints[3];
+        float wrist_pitch = joints[4];
+        float wrist_yaw = joints[5];
+        float jaw_angle1 = UDPComm.jaw_angle_PSM1;
+
+        // desired joint values
+        if (roll >= -3)
+        {
+            roll -= 0.55f;
+            ClutchPSM();
+            // send message
+            jointsMessage = "{\"move_jp\":{\"Goal\":[" +
+                yaw.ToString(CultureInfo.InvariantCulture) + "," +
+                pitch.ToString(CultureInfo.InvariantCulture) + "," +
+                insertion.ToString(CultureInfo.InvariantCulture) + "," +
+                roll.ToString(CultureInfo.InvariantCulture) + "," +
+                wrist_pitch.ToString(CultureInfo.InvariantCulture) + "," +
+                wrist_yaw.ToString(CultureInfo.InvariantCulture) +
+                "]}}";
+            jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jaw_angle1.ToString("R", CultureInfo.InvariantCulture) + "]}}";
+            UDP.GetComponent<UDPComm>().UDPsend(jointsMessage, jaw_message, "PSM2");
+            ClutchPSM();
         }
     }
 }

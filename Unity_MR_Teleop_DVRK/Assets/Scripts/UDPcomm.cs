@@ -163,8 +163,8 @@ public class UDPComm : MonoBehaviour
         }
         else if (parser.StringMatch(dVRK_msg_PSM1, "\"setpoint_js\":"))
         {
-            PSM1_Joints = parser.GetECMJointPositions(dVRK_msg_PSM1);
-            //Debug.Log("ECM_Joint positions are: " + ECM_Joints);
+            PSM1_Joints = parser.GetJoints(dVRK_msg_PSM1);
+            //Debug.Log("PSM1_Joint positions are: " + PSM1_Joints);
         }
         // Start receiving messages again
         socket.BeginReceiveFrom(data_PSM1, 0, data_PSM1.Length, SocketFlags.None, ref remote_PSM1, new AsyncCallback(ReceiveCallbackPSM1), socket);
@@ -208,8 +208,8 @@ public class UDPComm : MonoBehaviour
         }
         else if (parser.StringMatch(dVRK_msg_PSM2, "\"setpoint_js\":"))
         {
-            PSM2_Joints = parser.GetECMJointPositions(dVRK_msg_PSM2);
-            //Debug.Log("ECM_Joint positions are: " + ECM_Joints);
+            PSM2_Joints = parser.GetJoints(dVRK_msg_PSM2);
+            //Debug.Log("PSM2_Joints positions are: " + PSM2_Joints);
         }
         // Start receiving messages again
         socket.BeginReceiveFrom(data_PSM2, 0, data_PSM2.Length, SocketFlags.None, ref remote_PSM2, new AsyncCallback(ReceiveCallbackPSM2), socket);

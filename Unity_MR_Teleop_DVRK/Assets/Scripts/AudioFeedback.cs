@@ -5,12 +5,6 @@ using UnityEngine;
 public class AudioFeedback : MonoBehaviour
 {
     public AudioClip cameraTeleopClip; // Reference to the teleoperation start voice recording
-    public AudioClip toolTekeopClip;
-    public AudioClip conflict_warnning;
-    public AudioClip handOutofView;
-    public AudioClip corrosingBounds;
-    public AudioClip clutch;
-    public AudioClip away;
     public AudioClip enterPSMTeleop;
     public AudioClip exitPSMTeleop;
     public AudioClip right;
@@ -21,13 +15,10 @@ public class AudioFeedback : MonoBehaviour
     public AudioClip cameraRotation;
     public AudioClip cameraTranslation;
     [HideInInspector]
-    public bool isWarnning;
-    [HideInInspector]
     public bool isOutofView;
     [HideInInspector]
     public bool isCorrosing;
     bool audioOn;
-    public float frequence = 0.5f;
     //public AudioClip teleoperationEndClip; // Reference to the teleoperation end voice recording
 
     private AudioSource[] audioSources; // Instance of the AudioSource component

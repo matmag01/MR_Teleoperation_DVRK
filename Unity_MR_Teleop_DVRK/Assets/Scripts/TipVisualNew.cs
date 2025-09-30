@@ -10,8 +10,6 @@ using System.Globalization;
 
 public class TipVisualNew : MonoBehaviour
 {
-    public GameObject UDP;
-
     // Robot variable
     public static Vector3 EE1_pos;
     public static Quaternion EE1_quat;
@@ -24,14 +22,6 @@ public class TipVisualNew : MonoBehaviour
     public static Vector2Int tipPositionPSM2;
     public static Vector2Int tipPositionPSM1Right;
     public static Vector2Int tipPositionPSM2Right;
-    public static float zCoordinatePSM2;
-    public static float zCoordinatePSM1;
-    float deltaInsertion;
-    List<Vector2Int> axesPSM2;
-    public static int width = 1300;
-    public static int height = 1024;
-    public static int shiftX = 0;
-    public static int shiftY = 0;
 
     void Start()
     {
@@ -130,16 +120,12 @@ public class TipVisualNew : MonoBehaviour
         EE2_pos = UDPComm.EE_pos_PSM2;
         EE2_quat = UDPComm.EE_quat_PSM2;
         EE_ECM = UDPComm.EE_pos_ECM;
-        zCoordinatePSM1 = RosToUnityPosition(EE1_pos).z;
-        zCoordinatePSM2 = RosToUnityPosition(EE2_pos).z;
 
-        //tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos) - Vector3.forward*deltaInsertion, calib);
-        //tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos) - Vector3.forward*deltaInsertion, calib);
         tipPositionPSM2 = ProjectToPixel(RosToUnityPosition(EE2_pos), calib);
         tipPositionPSM1 = ProjectToPixel(RosToUnityPosition(EE1_pos), calib);
         tipPositionPSM2Right = ProjectToPixel(RosToUnityPosition(EE2_pos), calibRight);
         tipPositionPSM1Right = ProjectToPixel(RosToUnityPosition(EE1_pos), calibRight);
-        print($"Tip PSM1: {tipPositionPSM1}");
+        //print($"Tip PSM1: {tipPositionPSM1}");
         // axis computation
         //axesPSM2 = GetProjectedAxes(EE2_pos, EE2_quat);
 
@@ -273,29 +259,6 @@ public class TipVisualNew : MonoBehaviour
         }
 
         return axisPixels;
-    }
-    Matrix<float> ResizeMatrix(Matrix<float> original, Vector2Int original_size, Vector2Int new_size)
-    {
-        // Obtain the intrinsic parameters from the original matrix
-        float cx = original[0, 2];
-        float cy = original[1, 2];
-
-        // Compute the scaling factors
-        float scaleX = (float)new_size.x / original_size.x;
-        float scaleY = (float)new_size.y / original_size.y;
-
-        // Apply the scaling to the intrinsic parameters
-        float newCx = cx * scaleX;
-        float newCy = cy * scaleY;
-
-        // Create a new matrix with the updated intrinsic parameters
-        Matrix<float> newMatrix = original.Clone();
-
-        // Replace the intrinsic parameters in the new matrix
-        newMatrix[0, 2] = newCx;
-        newMatrix[1, 2] = newCy;
-
-        return newMatrix;
     }
 
     public static Vector3 RosToUnityPosition(Vector3 rosPos)

@@ -10,10 +10,7 @@ public class StartingScript : MonoBehaviour
 {
     //public GameObject homeButton;
     //public GameObject calibButton;
-    float first_timer_camera_on = 0f;
-    float first_timer_camera_off = 0f;
     public GameObject quad;
-    public GameObject headTrack;
     public GameObject axis;
     float first_timer_PSM1_off = 0f;
     float first_timer_PSM1_on = 0f;
@@ -31,7 +28,6 @@ public class StartingScript : MonoBehaviour
     public GameObject OFFPSM2;
     public GameObject calib_txt;
     public GameObject intro;
-    public GameObject video;
     public static float count;
     public static bool isCenetered;
     public GameObject audioFeedback;

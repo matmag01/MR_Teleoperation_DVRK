@@ -1,7 +1,5 @@
 
 // script to communicate with dVRK using UDP
-
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +27,6 @@ public class UDPComm : MonoBehaviour
     public static string dVRK_msg_ECM;
     public static string dVRK_msg_PSM1;
     public static string dVRK_msg_PSM2;
-    public static int read_msg_count = 0;
     public static Vector<float> ECM_Joints;
     public static Vector<float> PSM1_Joints;
     public static Vector<float> PSM2_Joints;
@@ -41,17 +38,7 @@ public class UDPComm : MonoBehaviour
     public static Vector3 EE_pos_ECM;
     public static Vector3 EE_pos_PSM1;
     public static Vector3 EE_pos_PSM2;
-
-    bool ReaddVRKmsg = false;
-    int readcounter = 0;
-    int filename = 0;
-    public GameObject hololens;
-
-    bool pause = false;
-    string file_name_dVRK;
-    string file_name_holo;
-
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -77,9 +64,7 @@ public class UDPComm : MonoBehaviour
         IPEndPoint sender_PSM1 = new IPEndPoint(IPAddress.Any, 1);
         remote_PSM1 = (EndPoint)(sender_PSM1);
         socket_PSM1.BeginReceiveFrom(data_PSM1, 0, data_PSM1.Length, SocketFlags.None, ref remote_PSM1, new AsyncCallback(ReceiveCallbackPSM1), socket_PSM1);
-
-
-        
+        /* PSM2 port*/
         data_PSM2 = new byte[1024];
         IPEndPoint ip_PSM2 = new IPEndPoint(IPAddress.Any, 48052); // Always remember to check the port!!
         socket_PSM2 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -338,42 +323,6 @@ public class UDPComm : MonoBehaviour
     {
         return Quaternion.LookRotation(m.GetColumn(2), m.GetColumn(1));
     }
-
-    public void ReaddVRK()
-    {
-        readcounter++;
-        if (readcounter > 1)
-        {
-            ReaddVRKmsg = false;
-            Debug.Log("stop Reading dVRK");
-            readcounter = 0;
-
-            //read.text = "Recording complete";
-
-            //read.GetComponent<Renderer>().enabled = true;
-
-        }
-        else
-        {
-
-            ReaddVRKmsg = true;
-            Debug.Log("Reading dVRK");
-            readcounter++;
-            filename++;
-            //read.text = "Recording";
-
-            //read.GetComponent<Renderer>().enabled = true;
-        }
-    }
-
-    // sends pose and jaw messages to dVRK over UDP connection
-
-
-    public void PauseRecord()
-    {
-        pause = !pause;
-    }
-
 
 
 }

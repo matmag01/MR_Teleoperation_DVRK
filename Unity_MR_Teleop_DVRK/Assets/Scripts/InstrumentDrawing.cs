@@ -15,7 +15,8 @@ public class InstrumentDrawing : MonoBehaviour
     public GameObject quad;
     private GameObject cylinderPSM2;
     private GameObject cylinderPSM1;
-    private GameObject cylinderPSM2Left;
+    private GameObject spherePSM1;
+    private GameObject spherePSM2;
     private int width = 1300;
     private int height = 1024;
     private Vector2 imageSizePx;
@@ -24,7 +25,6 @@ public class InstrumentDrawing : MonoBehaviour
     Vector2 uvPSM1;
     Vector3 worldPosPSM1;
     Vector3 worldPosEndPSM1;
-    Vector3 midpointPSM1;
     public static bool smallDistancePSM1 = false;
     float distanceToSurfacePSM1;
     Vector2 tipPxPSM2;
@@ -32,18 +32,14 @@ public class InstrumentDrawing : MonoBehaviour
     Vector3 tipOnQuadPlanePSM2;
     Vector3 worldPosPSM2;
     Vector3 worldPosEndPSM2;
-    Vector3 worldPosPSM2Left;
-    Vector3 worldPosEndPSM2Left;
 
     public static bool smallDistancePSM2 = false;
-    float distanceToSurfacePSM2;
     public Material cylinderMaterial;
     public Material cylinderMaterialLeft;
     quaternion quatPSM1;
     quaternion quatPSM2;
     public float instrumentLength = 0.2f; //20 cm
     public float instrumentRadius = 0.01f; //1 cm
-    public float smoothingFactor = 0.61f;
     bool PSM1 = true;
     public float maxDistance = 0.07f; // 7 cm
     public float distanceToSurface = -0.005f;
@@ -129,7 +125,8 @@ public class InstrumentDrawing : MonoBehaviour
         {
             Destroy(cylinderPSM1);
             Destroy(cylinderPSM2);
-            //Destroy(cylinderPSM2Left);
+            Destroy(spherePSM1);
+            Destroy(spherePSM2);
             return;
         }
 
@@ -146,6 +143,18 @@ public class InstrumentDrawing : MonoBehaviour
             cylinderPSM2.GetComponent<Renderer>().material = cylinderMaterial;
             Destroy(cylinderPSM2.GetComponent<Collider>());
         }
+        if(spherePSM1 == null)
+        {
+            spherePSM1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            spherePSM1.GetComponent<Renderer>().material = cylinderMaterial;
+            Destroy(spherePSM1.GetComponent<Collider>());
+        }
+        if(spherePSM2 == null)
+        {
+            spherePSM2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            spherePSM2.GetComponent<Renderer>().material = cylinderMaterial;
+            Destroy(spherePSM2.GetComponent<Collider>());
+        }
         /*
         if (cylinderPSM2Left == null)
         {
@@ -155,8 +164,8 @@ public class InstrumentDrawing : MonoBehaviour
         }
         */
         // Set cylinder transforms
-        SetCylinderTransform(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, instrumentLength, instrumentRadius, PSM1 = true);
-        SetCylinderTransform(cylinderPSM2, worldPosPSM2, worldPosEndPSM2, instrumentLength, instrumentRadius, PSM1 = false);
+        SetCylinderTransform(spherePSM1, cylinderPSM1, worldPosPSM1, worldPosEndPSM1, instrumentLength, instrumentRadius, PSM1 = true);
+        SetCylinderTransform(spherePSM2, cylinderPSM2, worldPosPSM2, worldPosEndPSM2, instrumentLength, instrumentRadius, PSM1 = false);
         //SetCylinderTransform(cylinderPSM2Left, worldPosPSM2Left, worldPosEndPSM2Left, distanceToSurface, instrumentRadius, PSM1 = false);
         // Distance from hand to cylinder:
         //smallDistancePSM1 = IsThumbNearCylinder(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, Handedness.Right, out distanceToSurfacePSM1);
@@ -264,13 +273,19 @@ public class InstrumentDrawing : MonoBehaviour
     }
 
     // Utility to set cylinder transform
-    private void SetCylinderTransform(GameObject cylinder, Vector3 start, Vector3 end, float length, float radius, bool PSM1)
+    private void SetCylinderTransform(GameObject sphere, GameObject cylinder, Vector3 start, Vector3 end, float length, float radius, bool PSM1)
     {
         Vector3 direction = end - start;
         float distance = direction.magnitude;
         Vector3 midpoint = start + direction / 2f;
         cylinder.transform.position = midpoint;
         cylinder.transform.up = direction.normalized;
-        cylinder.transform.localScale = new Vector3(radius, length / 2f, radius); // radius=0.03, height=length
-    }
+        cylinder.transform.localScale = new Vector3(radius, length / 2f, radius);
+
+        // Tip as sphere
+        sphere.transform.localScale = Vector3.one * radius;
+
+        // Posizione: punta esattamente alla fine del cilindro (usa +Vector3.up)
+        sphere.transform.position = start;
+        }
 }

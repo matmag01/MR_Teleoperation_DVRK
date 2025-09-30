@@ -50,10 +50,6 @@ public class HandTracking : MonoBehaviour
     public static float pinch_dist_PSM1;
     public static float pinch_dist_PSM2;
     float clutch_distance;
-    //Vector3 lastPosition;
-    //Vector3 currentPosition;
-    //Quaternion currentRotation;
-    //Quaternion lastRotation;
     Vector3 startHandPos;
     Quaternion startHandRot;
 
@@ -75,7 +71,6 @@ public class HandTracking : MonoBehaviour
     float jawAngleSend;
     string jointsMessage;
 
-
     // Flags
     public bool teleop;
     bool handWasNotTracked = true;
@@ -84,18 +79,15 @@ public class HandTracking : MonoBehaviour
     bool firstTimeLeft = true;
     bool firstTimeRight = true;
     bool firstTimeOutOfView = true;
-    static public bool arduinoPSM1 = false;
-    static public bool arduinoPSM2 = false;
     static public bool isReset = false;
-    bool clockWise = false;
-    bool counterClockWise = false;
+    bool closeRight = false;
+    bool closeLeft = false;
 
     // Time
     float T = 0f;
     // Filter
     MotionFilter PSM1MotionFilter;
     MotionFilter PSM2MotionFilter;
-    public float rotationScale = 0.67f;
     private QuaternionEMAFilter PSM1RotFilter;
     private QuaternionEMAFilter PSM2RotFilter;
 
@@ -108,9 +100,9 @@ public class HandTracking : MonoBehaviour
         handAxis = Instantiate(axis, this.transform);
         handAxis.transform.localScale = new Vector3(0.015f, 0.015f, 0.025f);
         PSM1MotionFilter = new MotionFilter();
-        PSM1MotionFilter.smoothingFactor = 0.9f;
+        PSM1MotionFilter.smoothingFactor = 0.95f;
         PSM2MotionFilter = new MotionFilter();
-        PSM2MotionFilter.smoothingFactor = 0.9f;
+        PSM2MotionFilter.smoothingFactor = 0.95f;
         PSM1RotFilter = new QuaternionEMAFilter(0.2f);
         PSM2RotFilter = new QuaternionEMAFilter(0.2f);
         firstTime = true;
@@ -204,14 +196,13 @@ public class HandTracking : MonoBehaviour
                             StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().LeftRightTooFar("right"));
                         }
                         checkPose = true;
-                        arduinoPSM1 = false;
+                        closeRight = true;
                         ClutchPSM();
                         return;
                     }
                     else
                     {
                         firstTimeRight = true;
-                        arduinoPSM1 = true;
                     }
                 }
                 if (PSM_flag == PSM2)
@@ -229,14 +220,13 @@ public class HandTracking : MonoBehaviour
                             StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().LeftRightTooFar("left"));
                         }
                         checkPose = true;
-                        arduinoPSM2 = false;
                         ClutchPSM();
                         return;
                     }
                     else
                     {
                         firstTimeLeft = true;
-                        arduinoPSM2 = true;
+
                     }
                 }
                 if (handWasNotTracked)

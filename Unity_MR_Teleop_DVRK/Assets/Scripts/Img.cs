@@ -33,13 +33,7 @@ public class Img : MonoBehaviour
 
     /* Variable for refresh rate computation*/
 
-    private int countFPS = 0;
-    private double sumFPS = 0f;
-    private double lastFrameTime = 0f;
-    private double averageFPS;
     private List<float> fpsSamples = new List<float>();
-    double lastStamp = 0;
-    double instantFPS;
     // Variables for gripper display
     Vector2Int endPSM1Left;
     Vector2Int endPSM1Right;

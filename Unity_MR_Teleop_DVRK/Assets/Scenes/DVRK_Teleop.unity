@@ -169,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   quad: {fileID: 746945108}
   axis: {fileID: 8755686004610376737, guid: e97cabd5816aa7043821b6b78661feb6, type: 3}
-  scale: 0.33
+  scale: 0.38
   UDP: {fileID: 671443128}
   sphere_marker: {fileID: 8631210952515766784, guid: 09d5b89fd40805249a6a54162e7959d4, type: 3}
   hololens: {fileID: 963194225}
@@ -500,7 +500,7 @@ MonoBehaviour:
   cameraZaxis: {fileID: 829750993}
   UDP: {fileID: 671443128}
   scale: 0.001
-  insertion_step: 0.003
+  insertion_step: 0.004
   radius: 0.12
   distance: 0.015
   teleop_on: {fileID: 1275452216}
@@ -513,7 +513,7 @@ MonoBehaviour:
   moveECM: {fileID: 716193420}
   txtQuadFixed: {fileID: 831608077}
   txtCameraFixed: {fileID: 336906984}
-  inactivityThreshold: 2.5
+  inactivityThreshold: 2
   audioFeedback: {fileID: 699940413}
   allowRotation: {fileID: 1628693140}
   allowTranslation: {fileID: 1625548643}

@@ -85,6 +85,8 @@ public class HandTracking : MonoBehaviour
 
     // Time
     float T = 0f;
+    float timerRight = 0f;
+    float timerLeft = 0f;
     // Filter
     MotionFilter PSM1MotionFilter;
     MotionFilter PSM2MotionFilter;
@@ -203,6 +205,21 @@ public class HandTracking : MonoBehaviour
                     else
                     {
                         firstTimeRight = true;
+                        if (closeRight)
+                        {
+                            quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.red;
+                            timerRight += Time.deltaTime;
+                            ClutchPSM();
+                            if (timerRight >= 0.75f)
+                            {
+                                closeRight = false;
+                                timerRight = 0f;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
                     }
                 }
                 if (PSM_flag == PSM2)
@@ -220,12 +237,28 @@ public class HandTracking : MonoBehaviour
                             StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().LeftRightTooFar("left"));
                         }
                         checkPose = true;
+                        closeLeft = true;
                         ClutchPSM();
                         return;
                     }
                     else
                     {
                         firstTimeLeft = true;
+                        if (closeLeft)
+                        {
+                            quad.transform.Find("QuadBgLeft").GetComponent<MeshRenderer>().material.color = Color.red;
+                            timerLeft += Time.deltaTime;
+                            ClutchPSM();
+                            if (timerLeft >= 0.75f)
+                            {
+                                closeLeft = false;
+                                timerLeft = 0f;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
 
                     }
                 }

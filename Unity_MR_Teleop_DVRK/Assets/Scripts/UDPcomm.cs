@@ -38,7 +38,11 @@ public class UDPComm : MonoBehaviour
     public static Vector3 EE_pos_ECM;
     public static Vector3 EE_pos_PSM1;
     public static Vector3 EE_pos_PSM2;
-    
+    private static DateTime lastTimePSM1 = DateTime.MinValue;
+    private static float latestDeltaPSM1 = 0f;
+    private static bool newDeltaPSM1 = false;
+    private static string filePathPSM1 = "PSM1_LatencyLogSending.csv";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -72,14 +76,12 @@ public class UDPComm : MonoBehaviour
         IPEndPoint sender_PSM2 = new IPEndPoint(IPAddress.Any, 3);
         remote_PSM2 = (EndPoint)(sender_PSM2);
         socket_PSM2.BeginReceiveFrom(data_PSM2, 0, data_PSM2.Length, SocketFlags.None, ref remote_PSM2, new AsyncCallback(ReceiveCallbackPSM2), socket_PSM2);
-        //Debug.Log("FINISH START!");
         
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
 
     /*Callback function for the ECM port*/
@@ -317,6 +319,7 @@ public class UDPComm : MonoBehaviour
         }
 
     }
+    
 
     // get quaternion from homogeneous matrix
     public static Quaternion QuaternionFromMatrix(Matrix4x4 m)

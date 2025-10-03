@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public abstract class BaseVideoPlayer : DependencyRoot {
 
@@ -73,8 +74,6 @@ public abstract class BaseVideoPlayer : DependencyRoot {
 		m_Texture.SetPipeline(_GetPipeline());
 		Debug.Log("Pipeline completa: " + _GetPipeline());
 		
-
-
 		m_Texture.OnFrameGrabbed += OnFrameGrabbed;
 		_Processor.ShaderName = "Image/I420ToRGB";
 
@@ -95,7 +94,7 @@ public abstract class BaseVideoPlayer : DependencyRoot {
 
 	bool _newFrame=false;
 	void OnFrameGrabbed(GstBaseTexture src,int index)
-	{
+	{ 
 		_newFrame = true;
 	}
 	/*
@@ -129,6 +128,9 @@ public abstract class BaseVideoPlayer : DependencyRoot {
 
 		}
 	*/
+
+	public float LastFrameLatencyMs; // Dichiara questa variabile per visualizzare il risultato
+
 void _processNewFrame()
 {
     _newFrame = false;
@@ -164,9 +166,30 @@ void _processNewFrame()
     }
 
     material.mainTexture = VideoTexture;
+	// === PUNTO DI MISURA B: Rendering completato sul thread principale ===
+    // === PUNTO DI MISURA B: Rendering completato sul thread principale ===
+    
+    // 1. Ottieni il timestamp di fine nel thread principale
+    long timeRenderedTicks = DateTime.UtcNow.Ticks; 
+    
+    // 2. Ottieni il timestamp di inizio dal thread secondario
+    long timeCapturedTicks = m_Texture.FrameCapturedTicks;
+
+    // 3. Calcola la differenza in tick
+    long elapsedTicks = timeRenderedTicks - timeCapturedTicks;
+    
+    // 4. Converti i tick in millisecondi: 1 tick = 0.0001 ms (100 nanosecondi)
+    double elapsedMilliseconds = elapsedTicks / 10000.0; // 10,000 tick per millisecondo
+    
+    // Assegna il valore alla variabile pubblica per la visualizzazione
+    LastFrameLatencyMs = (float)elapsedMilliseconds;
+
+    // Puoi anche visualizzare il valore nel Debug Log:
+    UnityEngine.Debug.Log("Latenza totale (GStreamer -> Texture Unity): " + LastFrameLatencyMs.ToString("F3") + " ms");
+    
 
     if (OnFrameAvailable != null)
-        OnFrameAvailable(this, VideoTexture);
+			OnFrameAvailable(this, VideoTexture);
 }
 	// Update is called once per frame
 	protected virtual void Update()

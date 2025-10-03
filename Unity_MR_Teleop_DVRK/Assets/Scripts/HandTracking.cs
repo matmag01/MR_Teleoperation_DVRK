@@ -4,9 +4,9 @@ using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft.MixedReality.Toolkit.Input;
 using System;
 using MathNet.Numerics.LinearAlgebra;
-using System.Linq;
-using TMPro;
 using System.Globalization;
+using System.IO;
+
 
 public class HandTracking : MonoBehaviour
 {
@@ -365,26 +365,13 @@ public class HandTracking : MonoBehaviour
         {
             quad.transform.Find("QuadBgLeft").GetComponent<MeshRenderer>().material.color = Color.green;
         }
+
         if (checkPose)
         {
             startHandPos = hololens.transform.localPosition + wristPos;
             startHandRot = handAxis.transform.rotation;
             startEEPos = EE_pos;
             startEERot = EE_quat;
-            /*
-            if (new_EE_pos == Vector3.zero | EE_pos == new_EE_pos)
-            {
-                startEEPos = EE_pos;
-                startEERot = EE_quat;
-            }
-            else
-            {
-                // Hack!
-                startEEPos = new_EE_pos;
-                startEERot = new_EE_rot;
-                Debug.Log("Hack!");
-            }
-            */
             checkPose = false;
         }
 
@@ -419,29 +406,7 @@ public class HandTracking : MonoBehaviour
             axis_rot = Quaternion.Inverse(offset) * axis_rot * offset;
         }
 
-
-        // --- ROTATION SCALING --- //
-        /*
-        // Extract angle and axis
-        axis_rot.ToAngleAxis(out float angle, out Vector3 axis);
-        axis.Normalize();
-
-        // Scale the angle
-        float scaledAngle = angle * rotationScale;
-
-        // Quaternion from axis and scaled angle
-        Quaternion scaled_rot = Quaternion.AngleAxis(scaledAngle, axis);
-
-        // Apply rotation to start EE rotation
-        new_EE_rot = scaled_rot * startEERot;
-        Debug.Log("Angle: " + angle + " Axis: " + axis + " Scaled Angle: " + scaledAngle + " New EE rot: " + new_EE_rot);
-
-        // FINE MODIFICA
-        */
-
-
-
-        new_EE_rot = axis_rot * startEERot; // Attention: x axis is shifted (I think)
+        new_EE_rot = axis_rot * startEERot;
 
 
         // Apply EMA filter to rotation
@@ -459,14 +424,20 @@ public class HandTracking : MonoBehaviour
         jawAngleSend = MoveJaw();
         jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jawAngleSend.ToString("R", CultureInfo.InvariantCulture) + "]}}";
         //Debug.Log(jaw_message);
+        double t0 = Time.realtimeSinceStartupAsDouble;
+
         if (PSM_flag == "PSM1")
         {
             UDP.GetComponent<UDPComm>().UDPsend(pose_message, jaw_message, "PSM1");
         }
-        else if (PSM_flag == "PSM2")
+
+        if (PSM_flag == "PSM2")
         {
             UDP.GetComponent<UDPComm>().UDPsend(pose_message, jaw_message, "PSM2");
         }
+        double t1 = Time.realtimeSinceStartupAsDouble;
+
+        Debug.Log("Motion Computation time: " + ((t1 - t0) * 1000.0) + " ms");
     }
     public float MoveJaw()
     {
@@ -486,7 +457,7 @@ public class HandTracking : MonoBehaviour
         }
         if (!stopJawAngle)
         {
-            toSend = ((desAngle - jaw_angle) / 2.0f) * T + jaw_angle;
+            toSend = ((desAngle - jaw_angle) / 1.1f) * T + jaw_angle;
             T += Time.deltaTime;
         }
         return toSend;

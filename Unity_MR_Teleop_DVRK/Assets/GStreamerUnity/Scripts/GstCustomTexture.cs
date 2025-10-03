@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Threading;
+using System; 
 
 public class GstCustomTexture : GstBaseTexture {
 	public string Pipeline="";
 
 	private GstCustomPlayer _player;
+
+    public long FrameCapturedTicks { get; private set; } 
 
 
 	public GstCustomPlayer Player
@@ -72,7 +75,9 @@ public class GstCustomTexture : GstBaseTexture {
 		Vector2 sz;
 		int c;
 		while (!_isDone) {
-			if (_player.GrabFrame (out sz, out c)) {
+			if (_player.GrabFrame (out sz, out c)) { 
+				FrameCapturedTicks = DateTime.UtcNow.Ticks; 
+
 				_grabbedSize = sz;
 				_grabbedComponents = c;
 				_imageGrabed = true;

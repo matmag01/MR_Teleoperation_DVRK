@@ -30,24 +30,30 @@ Should be replace with the ip adress of your windows pc.
 - Complete [camera calibration](https://github.com/matmag01/dvrk_camera_stereo_calibration) and [hand-eye registration](https://github.com/jhu-dvrk/dvrk_camera_registration)
 
 ## Commands
-- Connect your Windows PC to the local network using Ethernet and disable the firewall of the PC
-- ROSCORE
+### Unity PC
+Connect your Windows PC to the local network using Ethernet and disable the firewall of the PC
+### ROScore
 ```
 source ~/catkin_ws/devel/setup.bash
 roscore
 ```
-- CONSOLE WITH SOCKET STREAMER
+### Socket Streamer
 ```
-rosrun dvrk_robot dvrk_console_json -j ~/catkin_ws/devel/share/jhu-daVinci/console-SUJ-ECM-PSM1-PSM2.json -m ~/catkin_ws/src/cisst-saw/sawIntuitiveResearchKit/share/socket-streamer/manager-socket-streamer-patient-cart.json
+rosrun dvrk_robot dvrk_console_json -j /home/mmagnan4/catkin_ws/devel/share/jhu-daVinci/console-SUJFixed-ECM-PSM1-PSM2.json -m /home/mmagnan4/catkin_ws/src/cisst-saw/sawIntuitiveResearchKit/share/socket-streamer/manager-socket-streamer-patient-cart.json -D
 ```
-  Push the button *POWER ON* and *HOME*. You should the words *PSM1*, *PSM2*, *MTML*, *MTMR*, *ECM* becoming green.
-- CAMERA and IMAGE
-  
+Push the button *POWER ON* and *HOME*. You should see the words *PSM1*, *PSM2*, *MTML*, *MTMR*, *ECM* becoming green.
+
+### Camera
+Clone git repository for GStream video pipeline:
+```
+cd ~/Desktop
+git clone https://github.com/matmag01/GStream-Pipeline.git
+```
+
 Open the Endoscope hardware.
 ```
-source ~/catkin_ws/devel/setup.bash
-roslaunch dvrk_video decklink_stere0_1280x1024.launch stereo_rig_name:=YOUR_RIG_NAME stereo_proc:=True
-rosrun stereo_pkg StereoConcatenator.py
+cd ~/Desktop/Gs-Stream-Video-Processing/
+python img_pipeline.py -v -p --host *YOUR_IP*
 ```
 - Activate the game mode on Unity
 

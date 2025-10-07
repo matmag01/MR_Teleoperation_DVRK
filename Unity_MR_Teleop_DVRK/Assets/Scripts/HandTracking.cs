@@ -6,6 +6,7 @@ using System;
 using MathNet.Numerics.LinearAlgebra;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 
 public class HandTracking : MonoBehaviour
@@ -15,11 +16,13 @@ public class HandTracking : MonoBehaviour
     string PSM1 = "PSM1";
     string PSM2 = "PSM2";
 
+
     // MRKT Variable
     Handedness hand;
     MixedRealityPose pose;
 
-    // Object to identify hands and GameObject 
+
+    // Object to identify hands and GameObject
     public GameObject sphere_marker;
     public GameObject axis;
     public float thresholdClutch = 0.011f;
@@ -30,6 +33,7 @@ public class HandTracking : MonoBehaviour
     public GameObject hololens;
     public GameObject teleop_on;
     public GameObject teleop_off;
+
 
     // Hand/Finger postion
     Vector3 thumbPos;
@@ -45,6 +49,7 @@ public class HandTracking : MonoBehaviour
     Quaternion middleRot;
     Quaternion thumb_prox_rot;
 
+
     // Distances
     public static float pinch_dist;
     public static float pinch_dist_PSM1;
@@ -52,6 +57,7 @@ public class HandTracking : MonoBehaviour
     float clutch_distance;
     Vector3 startHandPos;
     Quaternion startHandRot;
+
 
     // Robot variable
     float jaw_angle;
@@ -64,12 +70,14 @@ public class HandTracking : MonoBehaviour
     Vector3 EE_pos_send;
     Matrix<float> EE_rot_send = Matrix<float>.Build.Random(3, 3);
 
+
     // Control
     public float scale = 0.02f;
     string pose_message;
     string jaw_message;
     float jawAngleSend;
     string jointsMessage;
+
 
     // Flags
     public bool teleop;
@@ -83,6 +91,7 @@ public class HandTracking : MonoBehaviour
     bool closeRight = false;
     bool closeLeft = false;
 
+
     // Time
     float T = 0f;
     float timerRight = 0f;
@@ -93,8 +102,21 @@ public class HandTracking : MonoBehaviour
     private QuaternionEMAFilter PSM1RotFilter;
     private QuaternionEMAFilter PSM2RotFilter;
 
+
     // Feedback
     public GameObject audioFeedback;
+
+
+    // .csv file
+
+    private StreamWriter csvWriterPSM1;
+    private StreamWriter csvWriterPSM2;
+    private string csvFilePathPSM1;
+    private string csvFilePathPSM2;
+    private bool csvInitialized = false;
+    public string logFilePrefix;
+
+
 
     void Start()
     {
@@ -109,7 +131,33 @@ public class HandTracking : MonoBehaviour
         PSM2RotFilter = new QuaternionEMAFilter(0.2f);
         firstTime = true;
 
+
+        // Write .csv file
+        
+        string logFolder = Path.Combine(Application.dataPath, "Log");
+        if (!Directory.Exists(logFolder))
+        {
+            Directory.CreateDirectory(logFolder);
+        }
+
+
+        if (PSM_flag == PSM1)
+        {
+            csvFilePathPSM1 = Path.Combine(logFolder, $"{logFilePrefix}_HandAxisRotation_PSM1.csv");
+            csvWriterPSM1 = new StreamWriter(csvFilePathPSM1, false);
+            csvWriterPSM1.WriteLine("Time_stamps, X_hand,Y_hand,Z_hand,W_hand,X_gripper,Y_gripper,Z_gripper,W_gripper");
+        }
+        else
+        {
+            csvFilePathPSM2 = Path.Combine(logFolder, $"{logFilePrefix}_HandAxisRotation_PSM2.csv");
+            csvWriterPSM2 = new StreamWriter(csvFilePathPSM2, false);
+            csvWriterPSM2.WriteLine("Time_stamps, X_hand,Y_hand,Z_hand,W_hand,X_gripper,Y_gripper,Z_gripper,W_gripper");
+        }
+        csvInitialized = true;
+        Debug.Log($"CSV logging initialized in {logFolder} with prefix: {logFilePrefix}");
+        
     }
+
 
     // Update is called once per frame
     void Update()
@@ -117,6 +165,7 @@ public class HandTracking : MonoBehaviour
         // Disactivate object attached to user hand
         thumbMarker.GetComponent<Renderer>().enabled = false;
         handAxis.SetActive(false);
+
 
         // Finger, hand and wrist position
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.ThumbTip, hand, out pose))
@@ -147,6 +196,7 @@ public class HandTracking : MonoBehaviour
             wristRot = pose.Rotation;
         }
 
+
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.ThumbProximalJoint, hand, out pose))
         {
             thumb_prox_pos = pose.Position;
@@ -154,11 +204,13 @@ public class HandTracking : MonoBehaviour
             //thumb_prox.GetComponent<Renderer>().enabled = true;
             //thumb_prox.transform.position = pose.Position;
 
+
             // rotation axis
             handAxis.SetActive(true);
             handAxis.transform.position = pose.Position;
             handAxis.transform.rotation = pose.Rotation;
         }
+
 
         // Pinch distance computation --> clutch state check
         pinch_dist = Vector3.Magnitude(thumbPos - indexPos);
@@ -260,6 +312,7 @@ public class HandTracking : MonoBehaviour
                             }
                         }
 
+
                     }
                 }
                 if (handWasNotTracked)
@@ -286,6 +339,7 @@ public class HandTracking : MonoBehaviour
                         checkPose = true;
                         ClutchPSM();
 
+
                     }
                     if (pinch_dist > clutch_distance + thresholdClutch)
                     {
@@ -305,6 +359,7 @@ public class HandTracking : MonoBehaviour
                 {
                     quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.yellow;
 
+
                 }
                 else if (PSM_flag == PSM2)
                 {
@@ -323,14 +378,19 @@ public class HandTracking : MonoBehaviour
             PSM2MotionFilter.ResetEMAValue();
         }
 
+
     }
+
+
 
 
     // --- functions --- //
 
+
     // Clutch
     public void ClutchPSM()
     {
+
 
         //lastPosition = hololens.transform.localPosition + wristPos;
         //lastRotation = handAxis.transform.rotation;
@@ -353,6 +413,7 @@ public class HandTracking : MonoBehaviour
         T = 0.0f;
     }
 
+
     // Teleop
     public void MovePSM()
     {
@@ -360,11 +421,13 @@ public class HandTracking : MonoBehaviour
         {
             quad.transform.Find("QuadBgRight").GetComponent<MeshRenderer>().material.color = Color.green;
 
+
         }
         else if (PSM_flag == PSM2)
         {
             quad.transform.Find("QuadBgLeft").GetComponent<MeshRenderer>().material.color = Color.green;
         }
+
 
         if (checkPose)
         {
@@ -374,6 +437,7 @@ public class HandTracking : MonoBehaviour
             startEERot = EE_quat;
             checkPose = false;
         }
+
 
         // Position control
         Vector3 delta = hololens.transform.InverseTransformVector(hololens.transform.position + wristPos - startHandPos);
@@ -389,6 +453,7 @@ public class HandTracking : MonoBehaviour
         else if (PSM_flag == PSM2)
             new_EE_pos = PSM2MotionFilter.UpdateEMA(new_EE_pos);
 
+
         // convert pos to same orientation as dVRK i.e. y and z swapped    
         EE_pos_send[0] = new_EE_pos[0];
         EE_pos_send[1] = new_EE_pos[2];
@@ -396,7 +461,10 @@ public class HandTracking : MonoBehaviour
         //Debug.Log("MOVE: PSM flag: " + PSM_flag + " EE pose: " + EE_pos + "EE start pose: " + startEEPos + "new EE pose: " + new_EE_pos);
 
 
+
+
         // Rotation control
+
 
         Quaternion axis_rot = Quaternion.Inverse(startHandRot) * handAxis.transform.rotation;
         //axis_rot = new(axis_rot.x, axis_rot.z, axis_rot.y, axis_rot.w);
@@ -406,7 +474,10 @@ public class HandTracking : MonoBehaviour
             axis_rot = Quaternion.Inverse(offset) * axis_rot * offset;
         }
 
+
         new_EE_rot = axis_rot * startEERot;
+
+
 
 
         // Apply EMA filter to rotation
@@ -415,29 +486,69 @@ public class HandTracking : MonoBehaviour
             new_EE_rot = PSM1RotFilter.UpdateEMA(new_EE_rot);
         else if (PSM_flag == PSM2)
             new_EE_rot = PSM2RotFilter.UpdateEMA(new_EE_rot);
-        
+       
         */
         //Debug.Log("MOVE : PSM flag: " + PSM_flag + " EE rot: " + EE_quat + "EE start rot: " + startEERot + "new EE pose: " + new_EE_rot + "jaw angle: " + jaw_angle);
+
 
         EE_rot_send = Quat2Rot(Quaternion.Normalize(new_EE_rot)); // convert normalised quaternion to rotation matrix
         pose_message = VectorFromMatrix(EE_pos_send, EE_rot_send);// get message to send to dVRK (new EE pose)
         jawAngleSend = MoveJaw();
         jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jawAngleSend.ToString("R", CultureInfo.InvariantCulture) + "]}}";
         //Debug.Log(jaw_message);
-        double t0 = Time.realtimeSinceStartupAsDouble;
-
         if (PSM_flag == "PSM1")
         {
             UDP.GetComponent<UDPComm>().UDPsend(pose_message, jaw_message, "PSM1");
         }
 
+
         if (PSM_flag == "PSM2")
         {
             UDP.GetComponent<UDPComm>().UDPsend(pose_message, jaw_message, "PSM2");
         }
-        double t1 = Time.realtimeSinceStartupAsDouble;
+        
+        if (csvInitialized)
+        {
+            if (PSM_flag == "PSM1" && csvWriterPSM1 != null)
+            {
+                Quaternion q = handAxis.transform.rotation;
+                string line = string.Format(
+                    "{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+                    Time.time.ToString("F4", CultureInfo.InvariantCulture),
+                    q.x.ToString("R", CultureInfo.InvariantCulture),
+                    q.y.ToString("R", CultureInfo.InvariantCulture),
+                    q.z.ToString("R", CultureInfo.InvariantCulture),
+                    q.w.ToString("R", CultureInfo.InvariantCulture),
+                    InstrumentDrawing.PSM1_cylinderQuat.x.ToString("R", CultureInfo.InvariantCulture),
+                    InstrumentDrawing.PSM1_cylinderQuat.y.ToString("R", CultureInfo.InvariantCulture),
+                    InstrumentDrawing.PSM1_cylinderQuat.z.ToString("R", CultureInfo.InvariantCulture),
+                    InstrumentDrawing.PSM1_cylinderQuat.w.ToString("R", CultureInfo.InvariantCulture)
+                );
+                csvWriterPSM1.WriteLine(line);
 
-        Debug.Log("Motion Computation time: " + ((t1 - t0) * 1000.0) + " ms");
+
+            }
+
+
+            else if (PSM_flag == "PSM2" && csvWriterPSM2 != null)
+            {
+                Quaternion q = handAxis.transform.rotation;
+                string line = string.Format(
+                    "{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+                    Time.time.ToString("F4", CultureInfo.InvariantCulture),
+                    q.x.ToString("R", CultureInfo.InvariantCulture),
+                    q.y.ToString("R", CultureInfo.InvariantCulture),
+                    q.z.ToString("R", CultureInfo.InvariantCulture),
+                    q.w.ToString("R", CultureInfo.InvariantCulture),
+                    InstrumentDrawing.PSM2_cylinderQuat.x.ToString("R", CultureInfo.InvariantCulture),
+                    InstrumentDrawing.PSM2_cylinderQuat.y.ToString("R", CultureInfo.InvariantCulture),
+                    InstrumentDrawing.PSM2_cylinderQuat.z.ToString("R", CultureInfo.InvariantCulture),
+                    InstrumentDrawing.PSM2_cylinderQuat.w.ToString("R", CultureInfo.InvariantCulture)
+                );
+                csvWriterPSM2.WriteLine(line);
+            }
+        }
+        
     }
     public float MoveJaw()
     {
@@ -462,6 +573,7 @@ public class HandTracking : MonoBehaviour
         }
         return toSend;
     }
+
 
     // This function sets PSM1 to right hand and PSM2 to left hand
     public void SetPSM(String PSM)
@@ -506,6 +618,7 @@ public class HandTracking : MonoBehaviour
         return angle * Mathf.Deg2Rad;
     }
 
+
     Vector3 SwitchFrame(Vector3 trans)
     {
         float y = trans.y;
@@ -520,10 +633,12 @@ public class HandTracking : MonoBehaviour
         return Quaternion.LookRotation(m.GetColumn(2), m.GetColumn(1));
     }
 
+
     // position vector and 3x3 rotation matrix to json string
     public static string VectorFromMatrix(Vector3 pos, Matrix<float> rot)
     {
         jsonFloat jsonfloat = new jsonFloat();
+
 
         // translation
         float[] translation = new float[3];
@@ -531,6 +646,7 @@ public class HandTracking : MonoBehaviour
         {
             translation[i] = pos[i];
         }
+
 
         // rotation
         string rotation = string.Empty;
@@ -559,6 +675,7 @@ public class HandTracking : MonoBehaviour
             }
         }
 
+
         rotation += "]";
         jsonfloat.Rotation = rotation;
         jsonfloat.Translation = translation;
@@ -576,10 +693,12 @@ public class HandTracking : MonoBehaviour
         return final_string;
     }
 
+
     // convert quaternion to rotation matrix
     public static Matrix<float> Quat2Rot(Quaternion q)
     {
         Matrix<float> m = Matrix<float>.Build.Random(3, 3);
+
 
         m[0, 0] = 1 - 2 * Mathf.Pow(q.y, 2) - 2 * Mathf.Pow(q.z, 2);
         m[0, 1] = 2 * q.x * q.y - 2 * q.w * q.z;
@@ -591,8 +710,10 @@ public class HandTracking : MonoBehaviour
         m[2, 1] = 2 * q.y * q.z + 2 * q.w * q.x;
         m[2, 2] = 1 - 2 * Mathf.Pow(q.x, 2) - 2 * Mathf.Pow(q.y, 2);
 
+
         return m;
     }
+
 
     // Quaternion EMA filter class
     public class QuaternionEMAFilter
@@ -629,7 +750,9 @@ public class HandTracking : MonoBehaviour
         StartingScript.firstTimePSM1 = true;
         StartingScript.firstTimePSM2 = true;
 
+
         Debug.Log("Return to home position");
+
 
         Debug.Log("Return to home position PSM1");
         // joint values from UDP
@@ -642,10 +765,12 @@ public class HandTracking : MonoBehaviour
         float wrist_yaw = joints[5];
         float jaw_angle1 = UDPComm.jaw_angle_PSM1;
 
+
         // desired joint values
         roll = 0f;
         wrist_pitch = 0f;
         wrist_yaw = 0f;
+
 
         // send message
         jointsMessage = "{\"move_jp\":{\"Goal\":[" +
@@ -659,7 +784,9 @@ public class HandTracking : MonoBehaviour
         jaw_message = "{\"jaw/move_jp\":{\"Goal\":[" + jaw_angle1.ToString("R", CultureInfo.InvariantCulture) + "]}}";
         UDP.GetComponent<UDPComm>().UDPsend(jointsMessage, jaw_message, "PSM1");
 
+
         Debug.Log("Return to home position PSM2");
+
 
         // joint values from UDP
         joints = UDPComm.PSM2_Joints;
@@ -671,10 +798,12 @@ public class HandTracking : MonoBehaviour
         wrist_yaw = joints[5];
         float jaw_angle2 = UDPComm.jaw_angle_PSM2;
 
+
         // desired joint values
         roll = 0f;
         wrist_pitch = 0f;
         wrist_yaw = 0f;
+
 
         // send message
         jointsMessage = "{\"move_jp\":{\"Goal\":[" +
@@ -698,6 +827,7 @@ public class HandTracking : MonoBehaviour
         float wrist_pitch = joints[4];
         float wrist_yaw = joints[5];
         float jaw_angle1 = UDPComm.jaw_angle_PSM1;
+
 
         // desired joint values
         if (roll <= 3)
@@ -729,6 +859,7 @@ public class HandTracking : MonoBehaviour
         float wrist_yaw = joints[5];
         float jaw_angle1 = UDPComm.jaw_angle_PSM1;
 
+
         if (roll <= 3)
         {
             roll += 0.55f;
@@ -757,6 +888,7 @@ public class HandTracking : MonoBehaviour
         float wrist_pitch = joints[4];
         float wrist_yaw = joints[5];
         float jaw_angle1 = UDPComm.jaw_angle_PSM1;
+
 
         // desired joint values
         if (roll >= -3)
@@ -788,6 +920,7 @@ public class HandTracking : MonoBehaviour
         float wrist_yaw = joints[5];
         float jaw_angle1 = UDPComm.jaw_angle_PSM1;
 
+
         // desired joint values
         if (roll >= -3)
         {
@@ -807,4 +940,24 @@ public class HandTracking : MonoBehaviour
             ClutchPSM();
         }
     }
+    
+    void OnApplicationQuit()
+    {
+        if (csvWriterPSM1 != null)
+        {
+            csvWriterPSM1.Flush();
+            csvWriterPSM1.Close();
+            Debug.Log("File CSV saved: " + csvFilePathPSM1);
+        }
+
+
+        if (csvWriterPSM2 != null)
+        {
+            csvWriterPSM2.Flush();
+            csvWriterPSM2.Close();
+            Debug.Log("File CSV saved: " + csvFilePathPSM2);
+        }
+    }
+    
 }
+

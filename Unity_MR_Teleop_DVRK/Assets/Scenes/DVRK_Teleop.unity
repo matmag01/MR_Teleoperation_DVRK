@@ -186,6 +186,7 @@ MonoBehaviour:
   showVideo: 0
   allowRotation: {fileID: 1628693140}
   allowTranslation: {fileID: 1625548643}
+  logFilePrefix: test_axis
 --- !u!114 &43717180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1968,6 +1969,7 @@ MonoBehaviour:
   PostProcessors: []
   VideoTexture: {fileID: 0}
   ConvertToRGB: 1
+  LastFrameLatencyMs: 0
 --- !u!114 &746945122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2040,6 +2042,7 @@ MonoBehaviour:
   scale: 0.1
   teleop: 0
   audioFeedback: {fileID: 699940413}
+  logFilePrefix: 
 --- !u!1 &829750993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2806,6 +2809,7 @@ MonoBehaviour:
   instrumentRadius: 0.007
   maxDistance: 0.06
   distanceToSurface: -0.069
+  axis: {fileID: 8755686004610376737, guid: e97cabd5816aa7043821b6b78661feb6, type: 3}
 --- !u!1 &1255125003
 GameObject:
   m_ObjectHideFlags: 0

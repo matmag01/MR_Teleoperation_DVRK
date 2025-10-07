@@ -43,12 +43,22 @@ public class InstrumentDrawing : MonoBehaviour
     bool PSM1 = true;
     public float maxDistance = 0.07f; // 7 cm
     public float distanceToSurface = -0.005f;
+    public static Quaternion PSM1_cylinderQuat;
+    public static Quaternion PSM2_cylinderQuat;
+    public GameObject axis;
+    private GameObject cylinderAxisPSM1;
+    private GameObject cylinderAxisPSM2;
+
 
     void Start()
     {
         imageSizePx = new Vector2(width, height);
         Bounds bounds = quad.GetComponent<Renderer>().bounds;
         imageSizeMeters = new Vector2(bounds.size.x, bounds.size.y);
+        cylinderAxisPSM1 = Instantiate(axis, this.transform);
+        cylinderAxisPSM2 = Instantiate(axis, this.transform);
+        cylinderAxisPSM1.transform.localScale = new Vector3(0.015f, 0.015f, 0.055f);  
+        cylinderAxisPSM2.transform.localScale = new Vector3(0.015f, 0.015f, 0.055f);    
     }
 
     void Update()
@@ -281,6 +291,24 @@ public class InstrumentDrawing : MonoBehaviour
         cylinder.transform.position = midpoint;
         cylinder.transform.up = direction.normalized;
         cylinder.transform.localScale = new Vector3(radius, length / 2f, radius);
+        
+        Quaternion cylRot = cylinder.transform.rotation;
+
+        Quaternion cylRotZ = cylRot * Quaternion.Euler(90f, 0f, 0f)*Quaternion.Euler(0f, 0f, -90f);
+        //Quaternion cylRotZ = cylRot * Quaternion.Euler(-90f, 0f, 0f);
+
+        if (PSM1)
+        {
+            PSM1_cylinderQuat = cylRotZ;
+            cylinderAxisPSM1.transform.position = cylinder.transform.position;
+            cylinderAxisPSM1.transform.rotation = cylRotZ;
+        }
+        else
+        {
+            PSM2_cylinderQuat = cylRotZ;
+            cylinderAxisPSM2.transform.position = cylinder.transform.position;
+            cylinderAxisPSM2.transform.rotation = cylRotZ;
+        }
 
         // Tip as sphere
         sphere.transform.localScale = Vector3.one * radius;

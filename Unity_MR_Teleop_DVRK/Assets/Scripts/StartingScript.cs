@@ -42,6 +42,7 @@ public class StartingScript : MonoBehaviour
     public bool showVideo = false;
     public GameObject allowRotation;
     public GameObject allowTranslation;
+    public string logFilePrefix;
 
     // Start is called before the first frame update
     void Start()
@@ -275,6 +276,7 @@ public class StartingScript : MonoBehaviour
         PSM1.teleop_off = OFFPSM1;
         PSM1.quad = quad;
         PSM1.audioFeedback = audioFeedback;
+        PSM1.logFilePrefix = logFilePrefix;
         PSM1.SetPSM("PSM1");
         /*PSM2*/
         GameObject PSM2_HandTrack = new GameObject("PSM2 HandTrack");
@@ -290,6 +292,7 @@ public class StartingScript : MonoBehaviour
         PSM2.teleop_off = OFFPSM2;
         PSM2.quad = quad;
         PSM2.audioFeedback = audioFeedback;
+        PSM2.logFilePrefix = logFilePrefix;
         PSM2.SetPSM("PSM2");
     }
     public void blockFollowCamera()

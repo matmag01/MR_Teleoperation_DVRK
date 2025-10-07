@@ -93,7 +93,7 @@ public class UDPComm : MonoBehaviour
         int bytesRead = socket_ECM.EndReceiveFrom(ar, ref remote_ECM);
         // Process the received data here
         dVRK_msg_ECM = Encoding.UTF8.GetString(data_ECM);
-        //Debug.Log("ECM message: " + dVRK_msg_ECM);
+        Debug.Log("ECM message: " + dVRK_msg_ECM);
         if (parser.StringMatch(dVRK_msg_ECM, "\"setpoint_cp\":"))
         {
             // extract rot and pos
@@ -121,7 +121,7 @@ public class UDPComm : MonoBehaviour
         int bytesRead = socket.EndReceiveFrom(ar, ref remote_PSM1);
         /*Process the received data here*/
         dVRK_msg_PSM1 = Encoding.UTF8.GetString(data_PSM1);
-        //Debug.Log("PSM1 message: " + dVRK_msg_PSM1);
+        Debug.Log("PSM1 message: " + dVRK_msg_PSM1);
 
         /*
         if (parser.StringMatch(dVRK_msg_PSM1, "\"Valid\":false")) //probably restarted "Valid":false

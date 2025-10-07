@@ -50,7 +50,6 @@ Clone git repository for GStream video pipeline:
 cd ~/Desktop
 git clone https://github.com/matmag01/GStream-Pipeline.git
 ```
-
 Open the Endoscope hardware.
 ```
 cd ~/Desktop/Gs-Stream-Video-Processing/

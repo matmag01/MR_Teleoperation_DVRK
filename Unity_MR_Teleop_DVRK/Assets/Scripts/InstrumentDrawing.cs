@@ -7,126 +7,285 @@ using MathNet.Numerics.LinearAlgebra;
 using System.Linq;
 using TMPro;
 using System.Globalization;
-using JetBrains.Annotations;
+using Unity.Mathematics;
+
 
 public class InstrumentDrawing : MonoBehaviour
 {
-    int width = 1280;
-    int height = 1024;
-    Vector2 imageSizeP;
-    Vector2 imageSizeM;
     public GameObject quad;
-    private GameObject cylinder;
-    Vector3 leftHandPosition;
-    float pixelDistanceX;
-    float pixelDistanceY;
-    float meterDistanceX;
-    float meterDistanceY;
-    public static Vector3 worldPos;
+    private GameObject cylinderPSM2;
+    private GameObject cylinderPSM1;
+    private GameObject spherePSM1;
+    private GameObject spherePSM2;
+    private int width = 1300;
+    private int height = 1024;
+    private Vector2 imageSizePx;
+    private Vector2 imageSizeMeters;
+    Vector2 tipPxPSM1;
+    Vector2 uvPSM1;
+    Vector3 worldPosPSM1;
+    Vector3 worldPosEndPSM1;
+    public static bool smallDistancePSM1 = false;
+    float distanceToSurfacePSM1;
+    Vector2 tipPxPSM2;
+    Vector2 uvPSM2;
+    Vector3 tipOnQuadPlanePSM2;
+    Vector3 worldPosPSM2;
+    Vector3 worldPosEndPSM2;
 
-    // Start is called before the first frame update
+    public static bool smallDistancePSM2 = false;
+    public Material cylinderMaterial;
+    public Material cylinderMaterialLeft;
+    quaternion quatPSM1;
+    quaternion quatPSM2;
+    public float instrumentLength = 0.2f; //20 cm
+    public float instrumentRadius = 0.01f; //1 cm
+    bool PSM1 = true;
+    public float maxDistance = 0.07f; // 7 cm
+    public float distanceToSurface = -0.005f;
+
     void Start()
     {
-        imageSizeP = new Vector2(width, height);
+        imageSizePx = new Vector2(width, height);
         Bounds bounds = quad.GetComponent<Renderer>().bounds;
-        imageSizeM = new Vector2(bounds.size.x, bounds.size.y); // quad dimension in meters
+        imageSizeMeters = new Vector2(bounds.size.x, bounds.size.y);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        /*
-        // position of the tip in meter in Unity RF
+        // Tip Orientation
+        quatPSM1 = TipVisualNew.EE1_quat;
+        quatPSM2 = TipVisualNew.EE2_quat;
 
-        // Pixel distance from the center:
-        pixelDistanceX = TipVisualNew.tipPositionPSM2.x - imageSizeP.x / 2;
-        pixelDistanceY = imageSizeP.y / 2 - TipVisualNew.tipPositionPSM2.y;
+        // Tip position
+        tipPxPSM1 = TipVisualNew.tipPositionPSM1;
+        tipPxPSM2 = TipVisualNew.tipPositionPSM2;
 
-        // Meter distance from the center:
-        meterDistanceX = imageSizeM.x * pixelDistanceX / imageSizeP.x;
-        meterDistanceY = imageSizeM.y * pixelDistanceY / imageSizeP.y;
+        // From pixel to world position (in the quad)
+        uvPSM1 = new Vector2(tipPxPSM1.x / imageSizePx.x, tipPxPSM1.y / imageSizePx.y);
+        uvPSM2 = new Vector2(tipPxPSM2.x / imageSizePx.x, tipPxPSM2.y / imageSizePx.y);
+        Vector3 localPointPSM1 = new Vector3(
+            (uvPSM1.x - 0.5f) * imageSizeMeters.x,
+            (0.5f - uvPSM1.y) * imageSizeMeters.y,
+            distanceToSurface
+        );
+        //tipOnQuadPlanePSM1 = quad.transform.TransformPoint(localPointPSM1);
+        worldPosPSM1 = quad.transform.position + quad.transform.right * localPointPSM1.x + quad.transform.up * localPointPSM1.y + quad.transform.forward * localPointPSM1.z;
 
-        // Position
-        //Vector3 localPos = new Vector3(meterDistanceX, meterDistanceY, 0);
-        //worldPos = quad.transform.TransformPoint(localPos);
-        worldPos = new Vector3(quad.transform.position.x + meterDistanceX, quad.transform.position.y + meterDistanceY, quad.transform.position.z);
-        */
-
-        // Real-world size and center of the quad
-        Bounds bounds = quad.GetComponent<Renderer>().bounds;
-
-        // world-space position of the bottom-left corner of the quad:
-        Vector3 bottomLeft = bounds.center 
-                            - quad.transform.right * (bounds.size.x / 2f) 
-                            - quad.transform.up * (bounds.size.y / 2f);
-
-        // tip’s pixel coordinates into UV coordinates (range 0–1). 
-        // uv.x and uv.y now represent percentages of how far across the image the point is
-        Vector2 uv = new Vector2(
-            TipVisualNew.tipPositionPSM2.x / imageSizeP.x,
-            TipVisualNew.tipPositionPSM2.y / imageSizeP.y
+        Vector3 localPointPSM2 = new Vector3(
+            (uvPSM2.x - 0.5f) * imageSizeMeters.x,
+            (0.5f - uvPSM2.y) * imageSizeMeters.y,
+            distanceToSurface
         );
 
-        // world-space position of the tip: 
-        // - Start at bottom left
-        // - Move rightward and upwards ( = how far across and down the image the tip pixel is)
-        // - Add z coordinate (distance tip from camera)
+        Vector3 localPointPSM2Left = new Vector3(
+            (uvPSM2.x - 0.5f) * imageSizeMeters.x,
+            (0.5f - uvPSM2.y) * imageSizeMeters.y,
+            distanceToSurface
+        );
+        tipOnQuadPlanePSM2 = quad.transform.TransformPoint(localPointPSM2);
+        worldPosPSM2 = quad.transform.position + quad.transform.right * localPointPSM2.x + quad.transform.up * localPointPSM2.y + quad.transform.forward * localPointPSM2.z;
 
-        worldPos =
-            bottomLeft
-            + quad.transform.right * (bounds.size.x * uv.x)
-            + quad.transform.up * (bounds.size.y * (1 - uv.y));
-            
-        Vector3 tipOnQuadPlane = bottomLeft + quad.transform.right * (bounds.size.x * uv.x) + quad.transform.up * (bounds.size.y * (1 - uv.y));
-        //worldPos = tipOnQuadPlane + quad.transform.forward * TipVisualNew.zCoordinate;
-        
-        if (!HandJointUtils.TryGetJointPose(TrackedHandJoint.ThumbTip, Handedness.Left, out MixedRealityPose handPose))
-        {
-            if (cylinder != null)
-            {
-                Destroy(cylinder);
-            }
-            return;
-        }
-            
-        leftHandPosition = handPose.Position;
-        
+        //tipOnQuadPlanePSM2 = quad.transform.TransformPoint(localPointPSM2Left);
+        //worldPosPSM2Left = quad.transform.position + quad.transform.right * localPointPSM2.x + quad.transform.up * localPointPSM2.y + quad.transform.forward * 0;
+
+        // Compute direction in ECM RF (forward vector rotated by quaternion)
+        Vector3 dirPSM1_ECM = math.mul(quatPSM1, Vector3.forward);
+        Vector3 dirPSM2_ECM = math.mul(quatPSM2, Vector3.forward);
+
+        // Switch X and Y axes to convert from right-handed to Unity's left-handed system
+        float tempX1 = dirPSM1_ECM.x;
+        dirPSM1_ECM.x = dirPSM1_ECM.y;
+        dirPSM1_ECM.y = tempX1;
+
+        float tempX2 = dirPSM2_ECM.x;
+        dirPSM2_ECM.x = dirPSM2_ECM.y;
+        dirPSM2_ECM.y = tempX2;
+
+        // Rotate direction by 90 degrees around Z axis to align with dvrk ECM reference frame
+        Quaternion rot90 = Quaternion.AngleAxis(90f, Vector3.forward);
+        dirPSM1_ECM = rot90 * dirPSM1_ECM;
+        dirPSM2_ECM = rot90 * dirPSM2_ECM;
+
+        // Transform direction to quadrant/world RF
+        Vector3 dirPSM1_Quad = quad.transform.TransformDirection(dirPSM1_ECM);
+        Vector3 dirPSM2_Quad = quad.transform.TransformDirection(dirPSM2_ECM);
+
+        // Invert direction to rotate cylinder by 180 degrees
+        dirPSM1_Quad *= -1f;
+        dirPSM2_Quad *= -1f;
+
+        // Compute end positions for cylinders
+        worldPosEndPSM1 = worldPosPSM1 + dirPSM1_Quad * instrumentLength;
+        worldPosEndPSM2 = worldPosPSM2 + dirPSM2_Quad * instrumentLength;
+        //worldPosEndPSM2Left = worldPosPSM2Left + dirPSM2_Quad * instrumentLength;
+
+        // If calibration not completed or camera open, destroy cylinders and reset filters --> Cylinders re-created only when teleop is on
         if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
         {
-            Destroy(cylinder);
+            Destroy(cylinderPSM1);
+            Destroy(cylinderPSM2);
+            Destroy(spherePSM1);
+            Destroy(spherePSM2);
             return;
         }
-        
-        // Create instrument grip
-        if (cylinder == null)
+
+        // Create cylinders if needed
+        if (cylinderPSM1 == null)
         {
-            cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            
-            // material with transparent shader
-            Material transparentMaterial = new Material(Shader.Find("Standard"));
-            transparentMaterial.color = new Color(0.5f, 0.5f, 0.5f, 0.5f); // alpha 0.5
+            cylinderPSM1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cylinderPSM1.GetComponent<Renderer>().material = cylinderMaterial;
+            Destroy(cylinderPSM1.GetComponent<Collider>());
+        }
+        if (cylinderPSM2 == null)
+        {
+            cylinderPSM2 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cylinderPSM2.GetComponent<Renderer>().material = cylinderMaterial;
+            Destroy(cylinderPSM2.GetComponent<Collider>());
+        }
+        if(spherePSM1 == null)
+        {
+            spherePSM1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            spherePSM1.GetComponent<Renderer>().material = cylinderMaterial;
+            Destroy(spherePSM1.GetComponent<Collider>());
+        }
+        if(spherePSM2 == null)
+        {
+            spherePSM2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            spherePSM2.GetComponent<Renderer>().material = cylinderMaterial;
+            Destroy(spherePSM2.GetComponent<Collider>());
+        }
+        /*
+        if (cylinderPSM2Left == null)
+        {
+            cylinderPSM2Left = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cylinderPSM2Left.GetComponent<Renderer>().material = cylinderMaterialLeft;
+            Destroy(cylinderPSM2.GetComponent<Collider>());
+        }
+        */
+        // Set cylinder transforms
+        SetCylinderTransform(spherePSM1, cylinderPSM1, worldPosPSM1, worldPosEndPSM1, instrumentLength, instrumentRadius, PSM1 = true);
+        SetCylinderTransform(spherePSM2, cylinderPSM2, worldPosPSM2, worldPosEndPSM2, instrumentLength, instrumentRadius, PSM1 = false);
+        //SetCylinderTransform(cylinderPSM2Left, worldPosPSM2Left, worldPosEndPSM2Left, distanceToSurface, instrumentRadius, PSM1 = false);
+        // Distance from hand to cylinder:
+        //smallDistancePSM1 = IsThumbNearCylinder(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, Handedness.Right, out distanceToSurfacePSM1);
+        //smallDistancePSM2 = IsThumbNearCylinder(cylinderPSM2, worldPosPSM2, worldPosEndPSM2, Handedness.Left, out distanceToSurfacePSM2);
+        smallDistancePSM1 = IsHandNearCylinder(cylinderPSM1, worldPosPSM1, worldPosEndPSM1, Handedness.Right, maxDistance);
+        smallDistancePSM2 = IsHandNearCylinder(cylinderPSM2, worldPosPSM2, worldPosEndPSM2, Handedness.Left, maxDistance);
+    }
+    private bool IsHandNearCylinder(GameObject cylinder, Vector3 start, Vector3 end, Handedness hand, float threshold)
+    {
+        // Initialize distance to a large value
+        float distanceToSurface = 100f;
 
-            transparentMaterial.SetFloat("_Mode", 3); // 3 = Transparent
-            transparentMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            transparentMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            transparentMaterial.SetInt("_ZWrite", 0);
-            transparentMaterial.DisableKeyword("_ALPHATEST_ON");
-            transparentMaterial.EnableKeyword("_ALPHABLEND_ON");
-            transparentMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            transparentMaterial.renderQueue = 3000;
-            cylinder.GetComponent<Renderer>().material = transparentMaterial;
+        if (cylinder == null)
+            return false;
 
-            //cylinder.GetComponent<Renderer>().material.color = Color.gray;
+        // Consider every joint of the hand for proximity check (all joint except ring and pinky fingers)
+        List<TrackedHandJoint> jointsToConsider = new List<TrackedHandJoint>
+        {
+            TrackedHandJoint.Wrist,
+            TrackedHandJoint.Palm,
+            TrackedHandJoint.ThumbMetacarpalJoint,
+            TrackedHandJoint.ThumbProximalJoint,
+            TrackedHandJoint.ThumbDistalJoint,
+            TrackedHandJoint.ThumbTip,
+            TrackedHandJoint.IndexMetacarpal,
+            TrackedHandJoint.IndexKnuckle,
+            TrackedHandJoint.IndexMiddleJoint,
+            TrackedHandJoint.IndexDistalJoint,
+            TrackedHandJoint.IndexTip,
+            TrackedHandJoint.MiddleMetacarpal,
+            TrackedHandJoint.MiddleKnuckle,
+            TrackedHandJoint.MiddleMiddleJoint,
+            TrackedHandJoint.MiddleDistalJoint,
+            TrackedHandJoint.MiddleTip,
+            TrackedHandJoint.RingMetacarpal,
+            TrackedHandJoint.PinkyMetacarpal
+        };
 
-            Destroy(cylinder.GetComponent<Collider>()); // avoid eventually collision with other GameObject 
+        foreach (var joint in jointsToConsider)
+        {
+            // If joint not found, skip to next
+            if (!HandJointUtils.TryGetJointPose(joint, hand, out MixedRealityPose pose))
+                continue;
+
+            Vector3 jointPos = pose.Position;
+
+            // Distance computation
+            Vector3 A = start;
+            Vector3 B = end;
+            Vector3 AB = B - A;
+            Vector3 AP = jointPos - A;
+
+            float t = Mathf.Clamp01(Vector3.Dot(AP, AB) / AB.sqrMagnitude);
+            Vector3 closestPoint = A + t * AB;
+
+            float distanceToAxis = Vector3.Distance(jointPos, closestPoint);
+            float radius = cylinder.transform.localScale.x / 2f;
+
+            distanceToSurface = Mathf.Max(0f, distanceToAxis - radius);
+
+            // If any joint is within the threshold, return true immediately --> STOP!
+            if (distanceToSurface <= threshold)
+            {
+                return true;
+            }
+        }
+        // If the loop completes without finding close joints,
+        return false;
+    }
+    private bool IsThumbNearCylinder(GameObject cylinder, Vector3 start, Vector3 end, Handedness hand, out float distanceToSurface)
+    {
+        distanceToSurface = 100f;
+
+        if (cylinder == null)
+            return false;
+
+        if (!HandJointUtils.TryGetJointPose(TrackedHandJoint.ThumbTip, hand, out MixedRealityPose pose))
+            return false;
+
+        Vector3 thumbPos = pose.Position;
+
+        Vector3 A = start;
+        Vector3 B = end;
+        Vector3 AB = B - A;
+        Vector3 AP = thumbPos - A;
+
+        float t = Mathf.Clamp01(Vector3.Dot(AP, AB) / AB.sqrMagnitude);
+        Vector3 closestPoint = A + t * AB;
+
+        float distanceToAxis = Vector3.Distance(thumbPos, closestPoint);
+        float radius = cylinder.transform.localScale.x / 2f;
+
+        distanceToSurface = Mathf.Max(0f, distanceToAxis - radius);
+        bool result = false;
+        if (distanceToSurface <= 0.06f)
+        {
+            result = true;
+        }
+        if (distanceToSurface > 0.06f)
+        {
+            result = false;
         }
 
-        // Instrument grip from hand to the instrument 
-        Vector3 direction = worldPos - leftHandPosition;
+        return result;
+    }
+
+    // Utility to set cylinder transform
+    private void SetCylinderTransform(GameObject sphere, GameObject cylinder, Vector3 start, Vector3 end, float length, float radius, bool PSM1)
+    {
+        Vector3 direction = end - start;
         float distance = direction.magnitude;
-        Vector3 midpoint = leftHandPosition + direction / 2f;
+        Vector3 midpoint = start + direction / 2f;
         cylinder.transform.position = midpoint;
         cylinder.transform.up = direction.normalized;
-        cylinder.transform.localScale = new Vector3(0.005f, distance / 2f, 0.005f); 
-    }
+        cylinder.transform.localScale = new Vector3(radius, length / 2f, radius);
+
+        // Tip as sphere
+        sphere.transform.localScale = Vector3.one * radius;
+
+        // Posizione: punta esattamente alla fine del cilindro (usa +Vector3.up)
+        sphere.transform.position = start;
+        }
 }

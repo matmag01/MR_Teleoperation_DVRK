@@ -16,18 +16,6 @@ public class HeadTracking : MonoBehaviour
     public GameObject cameraZaxis;
     public GameObject UDP;
     string jointsMessage;
-    /*
-    public GameObject directionArrow;
-    public GameObject forwardArrow;
-    public GameObject backwardArrow;
-    public GameObject CWArrow;
-    public GameObject CCWArrow;
-    public TextMeshPro cameraAngle;
-    public GameObject middle_point;
-    public GameObject audioFeedback;
-    */
-
-
     Vector3 cameraStartPosition;
     //Param for Endoscope
     Vector3 EE_pos;        // EE pos from dVRK
@@ -40,7 +28,6 @@ public class HeadTracking : MonoBehaviour
     Quaternion EE_start_rot;
     Quaternion cameraLocalStartRotation;
     Vector3 projected_Vector;
-
     public float scale = 0.01f;
     public float insertion_step = 0.003f;
     public float radius = 0.12f;
@@ -52,7 +39,6 @@ public class HeadTracking : MonoBehaviour
     public GameObject extraction;
     public GameObject ECM_status;
     public GameObject rotation;
-
     bool isFirstData = true;
     [HideInInspector]
     public bool isOpen = false;

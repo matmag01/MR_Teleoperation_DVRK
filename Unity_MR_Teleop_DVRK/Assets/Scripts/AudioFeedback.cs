@@ -5,12 +5,6 @@ using UnityEngine;
 public class AudioFeedback : MonoBehaviour
 {
     public AudioClip cameraTeleopClip; // Reference to the teleoperation start voice recording
-    public AudioClip toolTekeopClip;
-    public AudioClip conflict_warnning;
-    public AudioClip handOutofView;
-    public AudioClip corrosingBounds;
-    public AudioClip clutch;
-    public AudioClip away;
     public AudioClip enterPSMTeleop;
     public AudioClip exitPSMTeleop;
     public AudioClip right;
@@ -18,14 +12,13 @@ public class AudioFeedback : MonoBehaviour
     public AudioClip calib;
     public AudioClip intro;
     public AudioClip badHandTracking;
-    [HideInInspector]
-    public bool isWarnning;
+    public AudioClip cameraRotation;
+    public AudioClip cameraTranslation;
     [HideInInspector]
     public bool isOutofView;
     [HideInInspector]
     public bool isCorrosing;
     bool audioOn;
-    public float frequence = 0.5f;
     //public AudioClip teleoperationEndClip; // Reference to the teleoperation end voice recording
 
     private AudioSource[] audioSources; // Instance of the AudioSource component
@@ -51,10 +44,27 @@ public class AudioFeedback : MonoBehaviour
     IEnumerator TeleoperationStarted()
     {
         audioSources[0].clip = cameraTeleopClip; // Set the voice recording clip to play
-        audioSources[2].volume = 0.55f;
+        audioSources[0].volume = 0.35f;
         audioSources[0].Play(); // Start playing the voice recording
         float duration = audioSources[0].clip.length;
         yield return new WaitForSeconds(duration);
+    }
+
+    public IEnumerator CameraModality(string act)
+    {
+        audioSources[0].Stop();
+        if (act == "rotate")
+        {
+            audioSources[0].clip = cameraRotation;
+        }
+        else if (act == "translate")
+        {
+            audioSources[0].clip = cameraTranslation;
+        }
+        audioSources[0].volume = 0.35f;
+        audioSources[0].Play(); // Start playing the voice recording
+        float duration = audioSources[0].clip.length;
+        yield return new WaitForSeconds(duration * 1.1f);
     }
 
     public IEnumerator LeftRightTooFar(string act)

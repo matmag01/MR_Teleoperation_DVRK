@@ -10,10 +10,7 @@ public class StartingScript : MonoBehaviour
 {
     //public GameObject homeButton;
     //public GameObject calibButton;
-    float first_timer_camera_on = 0f;
-    float first_timer_camera_off = 0f;
     public GameObject quad;
-    public GameObject headTrack;
     public GameObject axis;
     float first_timer_PSM1_off = 0f;
     float first_timer_PSM1_on = 0f;
@@ -31,9 +28,8 @@ public class StartingScript : MonoBehaviour
     public GameObject OFFPSM2;
     public GameObject calib_txt;
     public GameObject intro;
-    public GameObject video;
-    float count;
-    bool isCenetered;
+    public static float count;
+    public static bool isCenetered;
     public GameObject audioFeedback;
     static public bool firstTimePSM1 = true;
     static public bool firstTimePSM2 = true;
@@ -43,6 +39,9 @@ public class StartingScript : MonoBehaviour
     bool firstTimeAudio = true;
     public GameObject txtQuadFixed;
     public GameObject txtCameraFixed;
+    public bool showVideo = false;
+    public GameObject allowRotation;
+    public GameObject allowTranslation;
 
     // Start is called before the first frame update
     void Start()
@@ -53,14 +52,27 @@ public class StartingScript : MonoBehaviour
         txtQuadFixed.GetComponent<MeshRenderer>().enabled = true;
         txtCameraFixed.GetComponent<MeshRenderer>().enabled = false;
         badHandTracking.GetComponent<MeshRenderer>().enabled = false;
-        intro.GetComponent<MeshRenderer>().enabled = true;
+        //intro.GetComponent<MeshRenderer>().enabled = true;
         ONPSM2.GetComponent<MeshRenderer>().enabled = false;
         OFFPSM2.GetComponent<MeshRenderer>().enabled = true;
         ONPSM1.GetComponent<MeshRenderer>().enabled = false;
         OFFPSM1.GetComponent<MeshRenderer>().enabled = true;
+        allowRotation.GetComponent<Renderer>().enabled = false;
+        allowTranslation.GetComponent<Renderer>().enabled = false;
         //homeButton.SetActive(false);
         //calibButton.SetActive(false);
-        video.SetActive(false);
+        if (showVideo)
+        {
+            //video.SetActive(false);
+            intro.GetComponent<MeshRenderer>().enabled = false;
+        }
+        else
+        {
+            //video.SetAcstive(false);
+            quad.GetComponent<CustomPipelinePlayer>().enabled = false;
+            intro.GetComponent<MeshRenderer>().enabled = true;
+        }
+    
         isCenetered = true;
         BoxCollider[] colliders = quad.GetComponents<BoxCollider>();
         foreach (BoxCollider col in colliders)
@@ -153,6 +165,19 @@ public class StartingScript : MonoBehaviour
         {
             PSM1.teleop = false;
             PSM2.teleop = false;
+            ONPSM2.GetComponent<MeshRenderer>().enabled = false;
+            OFFPSM2.GetComponent<MeshRenderer>().enabled = true;
+            ONPSM1.GetComponent<MeshRenderer>().enabled = false;
+            OFFPSM1.GetComponent<MeshRenderer>().enabled = true;
+            first_timer_PSM2_on = 0;
+            first_timer_PSM1_on = 0;
+        }
+        if(HandTracking.isReset)
+        {
+            StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().PSMTeleop("exit"));
+            PSM1.teleop = false;
+            PSM2.teleop = false;
+            HandTracking.isReset = false;
             ONPSM2.GetComponent<MeshRenderer>().enabled = false;
             OFFPSM2.GetComponent<MeshRenderer>().enabled = true;
             ONPSM1.GetComponent<MeshRenderer>().enabled = false;

@@ -4,6 +4,7 @@
 
 This repository provides the codebase for Mixed Reality Teleoperation of the da Vinci Research Kit (dVRK) using HoloLens 2. More details about the dVRK can be found in the [official documentation](https://dvrk.readthedocs.io/main/). 
 
+[Video here](ImgVideoREADme/Teleop.mp4).
 ## Prerequisite
 
 ### Install dVRK software

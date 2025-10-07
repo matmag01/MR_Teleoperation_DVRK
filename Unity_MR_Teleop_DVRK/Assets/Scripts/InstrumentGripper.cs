@@ -70,10 +70,10 @@ public class InstrumentGripper : MonoBehaviour
         List<Vector2Int> axesPSM2 = TipVisualNew.GetProjectedAxes(TipVisualNew.EE2_pos, TipVisualNew.EE2_quat);
         tipPxPSM1 = TipVisualNew.tipPositionPSM1;
         zPxPSM1 = axesPSM1[3];
-        dirZPxPSM1 = (zPxPSM1 - tipPxPSM1);
+        dirZPxPSM1 = -(zPxPSM1 - tipPxPSM1);
         tipPxPSM2 = TipVisualNew.tipPositionPSM2;
         zPxPSM2 = axesPSM2[3];
-        dirZPxPSM2 = (zPxPSM2 - tipPxPSM2);
+        dirZPxPSM2 = -(zPxPSM2 - tipPxPSM2);
         //float zPSM2 = scale * TipVisualNew.zCoordinatePSM2;
         //float zPSM1 = scale * TipVisualNew.zCoordinatePSM1;
         float zPSM2 = 0.0f;
@@ -127,7 +127,7 @@ public class InstrumentGripper : MonoBehaviour
 
         worldPosEndPSM1 = quad.transform.position + quad.transform.right * localPointEndPSM1.x + quad.transform.up * localPointEndPSM1.y + quad.transform.forward * zEnd;
         worldPosEndPSM2 = quad.transform.position + quad.transform.right * localPointEndPSM2.x + quad.transform.up * localPointEndPSM2.y + quad.transform.forward * zEnd;;
-                
+        /*      
         if (!CalibrationScript.calib_completed || MovecameraLikeConsole.isOpen)
         {
             Destroy(cylinderPSM1);
@@ -136,7 +136,7 @@ public class InstrumentGripper : MonoBehaviour
             Destroy(cylinderPSM2Bis);
             return;
         }
-        
+        */
         if (cylinderPSM1 == null)
         {
             cylinderPSM1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);

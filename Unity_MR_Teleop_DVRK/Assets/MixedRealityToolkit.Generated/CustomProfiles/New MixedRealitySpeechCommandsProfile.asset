@@ -59,16 +59,51 @@ MonoBehaviour:
       description: Trigger
       axisConstraint: 3
   - localizationKey: 
-    keyword: Reset
+    keyword: Home
     keyCode: 0
     action:
       id: 6
       description: Trigger
       axisConstraint: 3
   - localizationKey: 
-    keyword: 
+    keyword: Rotate
     keyCode: 0
     action:
-      id: 0
+      id: 6
+      description: Trigger
+      axisConstraint: 3
+  - localizationKey: 
+    keyword: Translate
+    keyCode: 0
+    action:
+      id: 6
+      description: Trigger
+      axisConstraint: 3
+  - localizationKey: 
+    keyword: Right Clockwise
+    keyCode: 0
+    action:
+      id: 6
+      description: Trigger
+      axisConstraint: 3
+  - localizationKey: 
+    keyword: RIght Counter clockwise
+    keyCode: 0
+    action:
+      id: 6
+      description: Trigger
+      axisConstraint: 3
+  - localizationKey: 
+    keyword: Left Clockwise
+    keyCode: 0
+    action:
+      id: 6
+      description: Trigger
+      axisConstraint: 3
+  - localizationKey: 
+    keyword: Left Counter clockwise
+    keyCode: 0
+    action:
+      id: 6
       description: Trigger
       axisConstraint: 3

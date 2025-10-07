@@ -17,6 +17,7 @@ public class CalibrationScript : MonoBehaviour
     public GameObject video;
     public GameObject audioFeedback;
     bool firstTime = true;
+    public GameObject quad;
     void Start()
     {
 
@@ -67,6 +68,8 @@ public class CalibrationScript : MonoBehaviour
         calibrated_pinch = sum / array_pinch.Length;
 
         Debug.Log("Average Pinch: " + calibrated_pinch);
-        video.SetActive(true);
+        //video.SetActive(true);
+        quad.GetComponent<CustomPipelinePlayer>().enabled = true;
+
     }
 }

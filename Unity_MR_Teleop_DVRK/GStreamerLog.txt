@@ -218,3 +218,24 @@ TOTAL:                       2344ms
 [17:17:49] Error: gst_element_get_state: assertion 'GST_IS_ELEMENT (element)' failed
 [17:17:49] Error: gst_object_unref: assertion 'object != NULL' failed
 [17:17:49] Info: Checking is active
+[22:49:48] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[22:49:48] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[22:49:48] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[22:49:48] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[22:49:48] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[22:49:48] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[22:49:49] Info: HKEY_CLASSES_ROOT\VisualStudio.edmx.17.0.0.0.213e2051\shell\Shell\Open does not have a "command" subkey
+[22:49:49] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[22:49:49] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
+[22:49:49] Info: HKEY_CLASSES_ROOT\Access.MDBFile\shell\Shell\openAsReadOnly does not have a "command" subkey
+[22:49:51] Info: Unable to get UWP apps: IPackage_get_InstalledLocation() for package #60 (`Handtrackingbuiltinrenderpipeline_1.0.0.0_x64__pzq3xp76mxafg') failed with code 0x80070002
+[22:49:51] Info: Collecting capable appnames: 0ms
+Allocating hashtables:...... 0ms
+Reading capable apps:        110ms
+Reading URL associations:... 0ms
+Reading extension assocs:    172ms
+Reading exe-only apps:...... 218ms
+Reading classes:             1985ms
+Reading UWP apps:            594ms
+Postprocessing:..............0ms
+TOTAL:                       3079ms

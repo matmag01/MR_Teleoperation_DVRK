@@ -57,8 +57,8 @@ public class InstrumentDrawing : MonoBehaviour
         imageSizeMeters = new Vector2(bounds.size.x, bounds.size.y);
         cylinderAxisPSM1 = Instantiate(axis, this.transform);
         cylinderAxisPSM2 = Instantiate(axis, this.transform);
-        cylinderAxisPSM1.transform.localScale = new Vector3(0.015f, 0.015f, 0.055f);  
-        cylinderAxisPSM2.transform.localScale = new Vector3(0.015f, 0.015f, 0.055f);    
+        cylinderAxisPSM1.transform.localScale = new Vector3(0.00015f, 0.00015f, 0.00055f);  
+        cylinderAxisPSM2.transform.localScale = new Vector3(0.00015f, 0.00015f, 0.00055f);    
     }
 
     void Update()

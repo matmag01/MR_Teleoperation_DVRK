@@ -1,0 +1,31 @@
+/* -*- Mode: Javascript; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+{
+    "ip": "10.162.34.145",
+    "port": "48053",
+    "read-commands": [
+        {
+            "name": "setpoint_js",
+            "type": "prmStateJoint"
+        },
+        {
+            "name": "setpoint_cp",
+            "type": "prmPositionCartesianGet"
+        }
+    ]
+    ,
+    "write-commands": [
+        {
+            "name": "move_cp",
+            "type": "prmPositionCartesianSet"
+        },
+        {
+            "name": "move_jp",
+            "type": "prmPositionJointSet"
+        },       
+        {
+            "name": "servo_jp",
+            "type": "prmPositionJointSet"
+        }
+    ]
+    
+}

@@ -23,9 +23,9 @@ catkin build
 
 - Navigate to the folder ```/catkin_ws/src/cisst-saw/sawIntuitiveResearchKit/share/socket-streamer``` and replace the files ```streamerECM.json```, ```streamerPSM1.json```, ```streamerPSM2.json```  with the file in the folder ```streamer_files``` from this repository.
 - In all the previous file, the line:
-```
-"ip": "xx.xxx.xx.xxx",
-```
+
+```"ip": "xx.xxx.xx.xxx"```
+
 Should be replace with the ip adress of your windows pc.
 - Complete [camera calibration](https://github.com/matmag01/dvrk_camera_stereo_calibration) and [hand-eye registration](https://github.com/jhu-dvrk/dvrk_camera_registration)
 

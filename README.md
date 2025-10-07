@@ -5,6 +5,7 @@
 This repository provides the codebase for Mixed Reality Teleoperation of the da Vinci Research Kit (dVRK) using HoloLens 2. More details about the dVRK can be found in the [official documentation](https://dvrk.readthedocs.io/main/). 
 
 [Video here](ImgVideoREADme/Teleop.mp4).
+
 ## Prerequisite
 
 ### Install dVRK software
@@ -53,7 +54,7 @@ git clone https://github.com/matmag01/GStream-Pipeline.git
 Open the Endoscope hardware.
 ```
 cd ~/Desktop/Gs-Stream-Video-Processing/
-python img_pipeline.py -v -p --host *YOUR_IP*
+python img_pipeline.py -v -p --host *Your_IP*
 ```
 - Activate the game mode on Unity
 

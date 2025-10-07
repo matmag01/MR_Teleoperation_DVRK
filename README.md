@@ -9,7 +9,7 @@ This repository provides the codebase for Mixed Reality Teleoperation of the da 
 
 ### Install dVRK software
 
-Follow the instructions in the [dVRK software compilation guide](https://dvrk.readthedocs.io/main/pages/software/compilation/ros1.html). You have also to install (gscam)[https://dvrk.readthedocs.io/main/pages/video/software/ros.html#using-gscam] for video streaming support.
+Follow the instructions in the [dVRK software compilation guide](https://dvrk.readthedocs.io/main/pages/software/compilation/ros1.html). You have also to install [gscam](https://dvrk.readthedocs.io/main/pages/video/software/ros.html#using-gscam) for video streaming support.
 
 ### Install ROS - TCP Endpoint
 Clone and build the Unity ROS–TCP Endpoint:

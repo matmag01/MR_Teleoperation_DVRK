@@ -27,7 +27,7 @@ catkin build
 "ip": "xx.xxx.xx.xxx",
 ```
 Should be replace with the ip adress of your windows pc.
-- Complete [camera calibration](https://dvrk.readthedocs.io/main/pages/video/software/calibration.html) e [hand-eye registration](https://github.com/jhu-dvrk/dvrk_camera_registration)
+- Complete [camera calibration](https://github.com/matmag01/dvrk_camera_stereo_calibration) and [hand-eye registration](https://github.com/jhu-dvrk/dvrk_camera_registration)
 
 ## Commands
 - Connect your Windows PC to the local network using Ethernet and disable the firewall of the PC

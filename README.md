@@ -13,6 +13,7 @@ This repository provides the codebase for Mixed Reality Teleoperation of the da 
 Follow the instructions in the [dVRK software compilation guide](https://dvrk.readthedocs.io/main/pages/software/compilation/ros1.html). You have also to install [gscam](https://dvrk.readthedocs.io/main/pages/video/software/ros.html#using-gscam) for video streaming support.
 
 ### Install ROS - TCP Endpoint
+
 Clone and build the Unity ROS–TCP Endpoint:
 ```
 cd ~/catkin_ws/src
@@ -62,12 +63,21 @@ Follow the instruction on the screen to perform *pinch calibration*. To redo the
 ### Endoscope Teleoperation
 - Say the word *CAMERA*. When ECM teleoperation is on the quadrant becomes blue.
 - With 2 hands grab the quadrant and move it
-- To rotate the camera tilt your head
-- To center the quadrant say the word *CENTER*
+- To rotate the camera tilt your head after saying *ROTATE*. To go back in translation mode say *TRANSLATE*
+- To center the quadrant say the word *CENTER* or wait 2 seconds
 - To exit ECM Teleoperation say the word *FREEZE*
 ### Instrument Teleoperation
-- Activate instrument teleoperation by doing pinch gesture (thumb and index tip) fpr 5 seconds
+- Activate instrument teleoperation by doing pinch gesture (thumb and index tip) for 5 seconds
 - Grab the virtual gripper to move the instrument
 - Jaw angle is controlled through the distance between thumb tip and middle finger tip
 - To clutch, do the pinch gesture (thumb and index tip close)
 - To center the quadrant say the word *POSITION*
+
+
+## Video
+
+Video can be found [here](https://livejohnshopkins-my.sharepoint.com/:f:/g/personal/mmagnan4_jh_edu/EoaMInIT_NRAqbvZf024RDQByJEww1GbDDKJgDl0acfdZg?e=EaY8t1)
+
+## Citation
+
+This work has been submitted to ISMR 2026.

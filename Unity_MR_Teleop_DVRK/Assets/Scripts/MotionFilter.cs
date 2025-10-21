@@ -1,3 +1,5 @@
+// Code taken from Ai, et Al., 2024 --> EMA Filter
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

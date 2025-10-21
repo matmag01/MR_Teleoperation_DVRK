@@ -1,3 +1,5 @@
+// Code used to take images published with ROS and draw point to check hand eye calibration result
+
 using System.Collections;
 using System.Collections.Generic;
 using System;

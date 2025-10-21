@@ -1,4 +1,4 @@
-// written by Guanhao Fu, 2020﻿
+// written by Guanhao Fu, 2020
 
 using UnityEngine;
 using System.Text.RegularExpressions;

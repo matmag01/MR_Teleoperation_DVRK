@@ -16,7 +16,6 @@ public class PrecisionHandTracking : MonoBehaviour
         public float lastUpdateTime;
     }
 
-    // Chiave: (mano, joint)
     private Dictionary<(Handedness, TrackedHandJoint), JointTrackingState> jointStates 
         = new Dictionary<(Handedness, TrackedHandJoint), JointTrackingState>();
 

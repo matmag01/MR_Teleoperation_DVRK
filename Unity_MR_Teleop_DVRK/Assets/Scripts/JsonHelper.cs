@@ -1,6 +1,6 @@
 // written by Bekwnn, 2015
 ﻿// contributed by Guney Ozsan, 2016
-// modified by Guanhao Fu, 2020﻿
+// modified by Guanhao Fu, 2020
 
 using System.Text.RegularExpressions;
 using System.Collections.Generic;

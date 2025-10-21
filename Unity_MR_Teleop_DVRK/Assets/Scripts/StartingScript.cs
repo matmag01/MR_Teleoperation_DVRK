@@ -62,11 +62,14 @@ public class StartingScript : MonoBehaviour
         allowTranslation.GetComponent<Renderer>().enabled = false;
         //homeButton.SetActive(false);
         //calibButton.SetActive(false);
+
+        // If you want to show the video before the calibration process
         if (showVideo)
         {
             //video.SetActive(false);
             intro.GetComponent<MeshRenderer>().enabled = false;
         }
+        // Normal usage --> Show the video only after calibration
         else
         {
             //video.SetAcstive(false);
@@ -85,11 +88,13 @@ public class StartingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Audio feedback
         if (firstTimeAudio)
         {
             StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().IntroOrCalib("intro"));
             firstTimeAudio = false;
         }
+        // When you want to have the quadrant in front of the user
         if (isCenetered)
         {
             //count = 0;
@@ -105,6 +110,8 @@ public class StartingScript : MonoBehaviour
                 quad.gameObject.GetComponent<FolloCamera>().enabled = false;
             }
         }
+
+        // Teleoperation off
         if (Fist(Handedness.Right))
         {
             first_timer_PSM1_off += Time.deltaTime;
@@ -129,6 +136,8 @@ public class StartingScript : MonoBehaviour
             ONPSM2.GetComponent<MeshRenderer>().enabled = false;
             OFFPSM2.GetComponent<MeshRenderer>().enabled = true;
         }
+
+        // teleoperation on
         if (CalibrationScript.calib_completed && HandTracking.pinch_dist_PSM1 < CalibrationScript.calibrated_pinch + 0.01)
         {
             first_timer_PSM1_on += Time.deltaTime;
@@ -162,6 +171,8 @@ public class StartingScript : MonoBehaviour
                 StartCoroutine(audioFeedback.GetComponent<AudioFeedback>().PSMTeleop("enter"));
             }
         }
+
+        // Camera Teleoperation 
         if (MovecameraLikeConsole.isOpen)
         {
             PSM1.teleop = false;
@@ -223,6 +234,8 @@ public class StartingScript : MonoBehaviour
             }
         }
     }
+
+    // Fist recognition
     private bool Fist(Handedness hand)
     {
         /*Grab gesture*/
@@ -233,6 +246,8 @@ public class StartingScript : MonoBehaviour
 
         return pinky_curl && ring_curl && middle_curl && index_curl;//&&thumb_curl;
     }
+
+    // Hand open recognition
     private bool HandOpen(Handedness hand)
     {
         // when hand not in view Curl return 0 -> have min threshold (as well as the max threshold)
@@ -242,6 +257,8 @@ public class StartingScript : MonoBehaviour
         bool index_curl = HandPoseUtils.IndexFingerCurl(hand) < 0.07 && HandPoseUtils.IndexFingerCurl(hand) > 0.0005;
         return pinky_curl && ring_curl && middle_curl && index_curl/*&&thumb_curl*/;
     }
+
+    /*
     private bool StartHandTrackingTeleop(Handedness hand)
     {
         {
@@ -260,6 +277,9 @@ public class StartingScript : MonoBehaviour
             return isPinching;
         }
     }
+    */
+
+
     public void StartHandTrack()
     {
         /*PSM1*/
@@ -295,6 +315,8 @@ public class StartingScript : MonoBehaviour
         PSM2.logFilePrefix = logFilePrefix;
         PSM2.SetPSM("PSM2");
     }
+
+    // Image quadrant in front of the user
     public void blockFollowCamera()
     {
         //calibButton.SetActive(true);

@@ -52,7 +52,7 @@ git clone https://github.com/matmag01/GStream-Pipeline.git
 Open the Endoscope hardware.
 ```
 cd ~/Desktop/Gs-Stream-Video-Processing/
-python img_pipeline.py -v -p --host *Your_IP*
+python img_pipeline.py -v -p --host *Your_IP* -y *Directory with left.yaml and right.yaml obatined after camera stereo calibration*
 ```
 - Activate the game mode on Unity
 

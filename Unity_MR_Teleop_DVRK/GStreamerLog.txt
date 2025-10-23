@@ -1,25 +1,2 @@
-[21:24:20] Info: Render API: 4
-[21:24:20] Info: Render API: 4
-[21:24:21] Info: Render API: 2
-[21:24:21] Info: Render API: 2
-[18:12:15] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
-[18:12:15] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
-[18:12:15] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
-[18:12:15] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
-[18:12:15] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
-[18:12:15] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
-[18:12:16] Info: HKEY_CLASSES_ROOT\VisualStudio.edmx.17.0.0.0.213e2051\shell\Shell\Open does not have a "command" subkey
-[18:12:16] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
-[18:12:16] Info: HKEY_CLASSES_ROOT\htmlfile\shell\Shell\Edit does not have a "command" subkey
-[18:12:16] Info: HKEY_CLASSES_ROOT\Access.MDBFile\shell\Shell\openAsReadOnly does not have a "command" subkey
-[18:12:18] Info: Unable to get UWP apps: IPackage_get_InstalledLocation() for package #59 (`Handtrackingbuiltinrenderpipeline_1.0.0.0_x64__pzq3xp76mxafg') failed with code 0x80070002
-[18:12:18] Info: Collecting capable appnames: 15ms
-Allocating hashtables:...... 0ms
-Reading capable apps:        344ms
-Reading URL associations:... 16ms
-Reading extension assocs:    609ms
-Reading exe-only apps:...... 234ms
-Reading classes:             1438ms
-Reading UWP apps:            844ms
-Postprocessing:..............0ms
-TOTAL:                       3500ms
+[22:08:58] Info: Render API: 4
+[22:08:59] Info: Render API: 2

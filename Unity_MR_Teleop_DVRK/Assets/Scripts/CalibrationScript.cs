@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft.MixedReality.Toolkit.Input;
 
+// Pinch gesture calibration
 public class CalibrationScript : MonoBehaviour
 {
     static int numSample = 40;

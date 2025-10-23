@@ -1,5 +1,5 @@
 
-// script to communicate with dVRK using UDP
+// script to communicate with dVRK using UDP. This script was taken and readapt from from Ai, et Al. 2024
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -93,7 +93,7 @@ public class UDPComm : MonoBehaviour
         int bytesRead = socket_ECM.EndReceiveFrom(ar, ref remote_ECM);
         // Process the received data here
         dVRK_msg_ECM = Encoding.UTF8.GetString(data_ECM);
-        Debug.Log("ECM message: " + dVRK_msg_ECM);
+        //Debug.Log("ECM message: " + dVRK_msg_ECM);
         if (parser.StringMatch(dVRK_msg_ECM, "\"setpoint_cp\":"))
         {
             // extract rot and pos

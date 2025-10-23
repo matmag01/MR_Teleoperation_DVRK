@@ -25,78 +25,7 @@ public class TipVisualNew : MonoBehaviour
 
     void Start()
     {
-        // Calibration matrix 3x3
-        /*
-        var matrixData1280x1024 = new float[,]
-        {
-            { 1621.6418f, 0f, 498.3872f },
-            { 0f, 1627.7641f, 549.8018f },
-            { 0f, 0f, 1f }
-        };
-        var matrixData1280x1024Proj = new float[,]
-        {
-            { 1814.948109173233f, 0f,  48.0199761390686f, 0f },
-            { 0f, 1814.948109173233f, 520.2153778076172f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        var matrixData1280x1024ProjRight = new float[,]
-        {
-            { 1814.948109173233f, 0f,  48.0199761390686f, -10.66455250459322f },
-            { 0f, 1814.948109173233f, 520.2153778076172f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        var matrixData1280x1024ProjNew = new float[,]
-        {
-            { 1925.85373f, 0f,  471.78134f, 0f },
-            { 0f, 1925.85373f, 570.27438f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        var matrixData1280x1024ProjRightNew = new float[,]
-        {
-            { 1925.85373f, 0f,  471.78134f, -10.2311f },
-            { 0f, 1925.85373f, 570.27438f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        
-        var matrixDataGstreamLeft = new float[,]
-        {
-            { 1161.71027f, 0f, 531.93198f, 0f },
-            { 0f, 1161.71027f, 341.46125f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        var matrixDataGstreamRight = new float[,]
-        {
-            { 1161.71027f, 0f, 531.93198f, 6.2986f },
-            { 0f, 1161.71027f, 341.46125f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        
-        var matrixDataGstreamLeft = new float[,]
-        {
-            { 1755.62582f, 0f, 836.81531f, 0f },
-            { 0f, 1755.62582f, 509.52462f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        var matrixDataGstreamRight = new float[,]
-        {
-            { 1755.62582f, 0f, 836.81531f, 9.30499f },
-            { 0f, 1755.62582f, 509.52462f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        
-        var matrixDataGstreamLeft = new float[,]
-        {
-            { 1905.46146f, 0f, 668.38528f, 0f },
-            { 0f, 1905.46146f, 498.80738f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        var matrixDataGstreamRight = new float[,]
-        {
-            {1905.46146f, 0f, 668.38528f, 10.55401f },
-            { 0f, 1905.46146f, 498.80738f, 0f },
-            { 0f, 0f, 1f, 0f }
-        };
-        */
+        // Calibration (projection) matrix 3x4 from camera calibration procedure
         var matrixDataGstreamLeft = new float[,]
         {
             { 1862.78912f, 0f, 697.99173f, 0f },
@@ -126,17 +55,19 @@ public class TipVisualNew : MonoBehaviour
         tipPositionPSM2Right = ProjectToPixel(RosToUnityPosition(EE2_pos), calibRight);
         tipPositionPSM1Right = ProjectToPixel(RosToUnityPosition(EE1_pos), calibRight);
         //print($"Tip PSM1: {tipPositionPSM1}");
+
         // axis computation
         //axesPSM2 = GetProjectedAxes(EE2_pos, EE2_quat);
-
         //Debug.Log($"Origin: {axesPSM2[0]}, X: {axesPSM2[1]}, Y: {axesPSM2[2]}, Z: {axesPSM2[3]}");
     }
+
+    // Project a point into image plane
     public static Vector2Int ProjectToPixel(Vector3 pos,  Matrix<float> projectionMatrix)
     {
-        // 1. Create the 4D homogeneous vector from the 3D point
+        // Create the 4D homogeneous vector from the 3D point
         float[] point3D_homogeneous = new float[] { pos.x, pos.y, pos.z, 1.0f };
 
-        // 2. Perform the manual 3x4 matrix by 4x1 vector multiplication
+        // Perform the manual 3x4 matrix by 4x1 vector multiplication
         // The result is a 3x1 vector (in homogeneous coordinates)
         float u = (projectionMatrix[0, 0] * point3D_homogeneous[0]) +
                   (projectionMatrix[0, 1] * point3D_homogeneous[1]) +
@@ -153,7 +84,7 @@ public class TipVisualNew : MonoBehaviour
                   (projectionMatrix[2, 2] * point3D_homogeneous[2]) +
                   (projectionMatrix[2, 3] * point3D_homogeneous[3]);
 
-        // 3. Normalize the coordinates to get the final pixel position
+        // Normalize the coordinates to get the final pixel position
         if (w == 0) 
         {
             Debug.LogError("The third component of the projected vector is zero. Cannot normalize.");
@@ -165,31 +96,8 @@ public class TipVisualNew : MonoBehaviour
 
         return new Vector2Int(Mathf.RoundToInt(x_pixel), Mathf.RoundToInt(y_pixel));
     }
-    /*
-    public static List<Vector2Int> GetProjectedAxes(Vector3 pos, Quaternion quat, float axisLength = 0.1f)
-    {
-        List<Vector2Int> axisPixels = new List<Vector2Int>();
 
-        Vector3 origin = RosToUnityPosition(pos);
-        Matrix4x4 R = Matrix4x4.Rotate(quat);
-        Vector3 x = origin + R.MultiplyVector(Vector3.right) * axisLength;
-        Vector3 y = origin + R.MultiplyVector(Vector3.up) * axisLength;
-        Vector3 z = origin + R.MultiplyVector(Vector3.forward) * axisLength;
-
-        Vector2Int origin_px = ProjectToPixel(origin, calib);
-        Vector2Int x_px = ProjectToPixel(x, calib);
-        Vector2Int y_px = ProjectToPixel(y, calib);
-        Vector2Int z_px = ProjectToPixel(z, calib);
-
-        axisPixels.Add(origin_px);
-        axisPixels.Add(x_px);
-        axisPixels.Add(y_px);
-        axisPixels.Add(z_px);
-
-        return axisPixels;
-    }
-    
-    */
+    // Project axis into image
     public static List<Vector2Int> GetProjectedAxes(Vector3 pos, Quaternion quat, float axisLengthPx = 50f)
     {
         List<Vector2Int> axisPixels = new List<Vector2Int>();
@@ -261,9 +169,10 @@ public class TipVisualNew : MonoBehaviour
         return axisPixels;
     }
 
+    // Take into account different reference frame 
     public static Vector3 RosToUnityPosition(Vector3 rosPos)
     {
-        // Change Y and Z (--> in UDP.comm they are inverted wrt to ROS). The change of sign is an offset to solve projection problem --> Need to be changed
+        // Change Y and Z (--> in UDP.comm they are inverted wrt to ROS). The change of sign is an "offset" to solve projection problem 
         return new Vector3(-rosPos.x, -rosPos.z, rosPos.y);
     }
 }

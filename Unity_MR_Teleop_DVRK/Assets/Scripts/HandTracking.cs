@@ -131,9 +131,7 @@ public class HandTracking : MonoBehaviour
         PSM2RotFilter = new QuaternionEMAFilter(0.2f);
         firstTime = true;
 
-
         // Write .csv file
-        
         string logFolder = Path.Combine(Application.dataPath, "Log");
         if (!Directory.Exists(logFolder))
         {
@@ -382,11 +380,6 @@ public class HandTracking : MonoBehaviour
     }
 
 
-
-
-    // --- functions --- //
-
-
     // Clutch
     public void ClutchPSM()
     {
@@ -460,11 +453,7 @@ public class HandTracking : MonoBehaviour
         EE_pos_send[2] = new_EE_pos[1];
         //Debug.Log("MOVE: PSM flag: " + PSM_flag + " EE pose: " + EE_pos + "EE start pose: " + startEEPos + "new EE pose: " + new_EE_pos);
 
-
-
-
         // Rotation control
-
 
         Quaternion axis_rot = Quaternion.Inverse(startHandRot) * handAxis.transform.rotation;
         //axis_rot = new(axis_rot.x, axis_rot.z, axis_rot.y, axis_rot.w);
@@ -476,20 +465,6 @@ public class HandTracking : MonoBehaviour
 
 
         new_EE_rot = axis_rot * startEERot;
-
-
-
-
-        // Apply EMA filter to rotation
-        /*
-        if (PSM_flag == PSM1)
-            new_EE_rot = PSM1RotFilter.UpdateEMA(new_EE_rot);
-        else if (PSM_flag == PSM2)
-            new_EE_rot = PSM2RotFilter.UpdateEMA(new_EE_rot);
-       
-        */
-        //Debug.Log("MOVE : PSM flag: " + PSM_flag + " EE rot: " + EE_quat + "EE start rot: " + startEERot + "new EE pose: " + new_EE_rot + "jaw angle: " + jaw_angle);
-
 
         EE_rot_send = Quat2Rot(Quaternion.Normalize(new_EE_rot)); // convert normalised quaternion to rotation matrix
         pose_message = VectorFromMatrix(EE_pos_send, EE_rot_send);// get message to send to dVRK (new EE pose)

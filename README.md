@@ -21,7 +21,7 @@ catkin build
 
 ### Configuration
 
-- Navigate to the folder ```/catkin_ws/src/cisst-saw/sawIntuitiveResearchKit/share/socket-streamer``` and replace the files ```streamerECM.json```, ```streamerPSM1.json```, ```streamerPSM2.json```  with the file in the folder ```streamer_files``` from this repository.
+- Navigate to the folder ```~/catkin_ws/src/cisst-saw/sawIntuitiveResearchKit/share/socket-streamer``` and replace the files ```streamerECM.json```, ```streamerPSM1.json```, ```streamerPSM2.json```  with the file in the folder ```streamer_files``` from this repository.
 - In all the previous file, the line:
 
 ```"ip": "xx.xxx.xx.xxx"```
@@ -39,7 +39,7 @@ roscore
 ```
 ### Socket Streamer
 ```
-rosrun dvrk_robot dvrk_console_json -j /home/mmagnan4/catkin_ws/devel/share/jhu-daVinci/console-SUJFixed-ECM-PSM1-PSM2.json -m /home/mmagnan4/catkin_ws/src/cisst-saw/sawIntuitiveResearchKit/share/socket-streamer/manager-socket-streamer-patient-cart.json -D
+rosrun dvrk_robot dvrk_console_json -j ~/catkin_ws/devel/share/jhu-daVinci/console-SUJFixed-ECM-PSM1-PSM2.json -m ~/catkin_ws/src/cisst-saw/sawIntuitiveResearchKit/share/socket-streamer/manager-socket-streamer-patient-cart.json -D
 ```
 Push the button *POWER ON* and *HOME*. You should see the words *PSM1*, *PSM2*, *MTML*, *MTMR*, *ECM* becoming green.
 

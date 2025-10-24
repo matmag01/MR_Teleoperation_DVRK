@@ -62,7 +62,7 @@ Follow the instruction on the screen to perform *pinch calibration*. To redo the
 - Say the word *CAMERA*. When ECM teleoperation is on the quadrant becomes blue.
 - With 2 hands grab the quadrant and move it
 - To rotate the camera tilt your head after saying *ROTATE*. To go back in translation mode say *TRANSLATE*
-- To center the quadrant say the word *CENTER* or wait 2 seconds
+- To center the quadrant say the word *CENTER* or wait for 2 seconds
 - To exit ECM Teleoperation say the word *FREEZE*
 ### Instrument Teleoperation
 - Activate instrument teleoperation by doing pinch gesture (thumb and index tip) for 5 seconds

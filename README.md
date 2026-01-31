@@ -78,4 +78,4 @@ Video can be found [here](https://livejohnshopkins-my.sharepoint.com/:f:/g/perso
 
 ## Citation
 
-This work has been submitted to ISMR 2026.
+This work has been accepted to ISMR 2026.
